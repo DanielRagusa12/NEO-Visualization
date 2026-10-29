@@ -4,3 +4,7 @@ lambda/lambdaDailyFetch/lambdaDailyFetch.zip
 __pycache__/
 *.py[cod]
 AGENTS.md
+
+# project-memory-init: public .pi start
+/.pi/
+# project-memory-init: public .pi end
