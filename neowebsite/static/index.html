@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEO Field Log</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=models-v1-liberty">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
@@ -18,6 +18,7 @@
             <p class="eyebrow">Near-Earth Object Field Log</p>
             <h1 id="page-title">Close approaches this week</h1>
             <p class="hero-copy">NASA NeoWs observations ranked by size, distance, speed, and scale against familiar vertical references.</p>
+            <p class="visual-note">Models and rotation periods are illustrative, not measured reconstructions. Tiny items are enlarged for visibility. Everest comparisons use summit elevation above sea level, not local mountain relief.</p>
 
             <div class="summary-grid" aria-label="Dataset summary">
                 <article class="summary-card">
@@ -47,6 +48,10 @@
             <div id="sortControls" class="sort-controls"></div>
         </section>
 
+        <div class="motion-controls" hidden>
+            <button id="motionToggle" class="motion-button" type="button" aria-controls="neoGrid">Pause asteroid motion</button>
+        </div>
+
         <section id="statusMessage" class="status-message" role="status">
             <span class="loader"></span>
             Loading this week's NEO data...
@@ -55,6 +60,7 @@
         <section id="neoGrid" class="neo-grid" aria-label="Near-Earth object cards"></section>
     </main>
 
-    <script src="main.js"></script>
+    <script src="motion.js?v=models-v1-liberty"></script>
+    <script src="main.js?v=models-v1-liberty"></script>
 </body>
 </html>

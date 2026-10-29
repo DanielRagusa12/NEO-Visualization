@@ -1,6 +1,17 @@
 const DATA_URL = '/data/latest.json';
 
-const REFERENCE_ASSETS = {};
+const ASSET_ROOT = 'assets/models/v1';
+const REFERENCE_ASSETS = {
+    average_human: { src: `${ASSET_ROOT}/references/human.png`, aspectRatio: 168 / 440 },
+    statue_of_liberty: { src: `${ASSET_ROOT}/references/statue-of-liberty.png`, aspectRatio: 144 / 440 },
+    eiffel_tower: { src: `${ASSET_ROOT}/references/eiffel-tower.png`, aspectRatio: 217 / 440 },
+    burj_khalifa: { src: `${ASSET_ROOT}/references/burj-khalifa.png`, aspectRatio: 71 / 440 },
+    mount_everest: { src: `${ASSET_ROOT}/references/everest.png`, aspectRatio: 480 / 314 }
+};
+const NEO_ASSETS = ['cratered', 'angular', 'elongated', 'wedge'].map(id => ({
+    poster: `${ASSET_ROOT}/neos/${id}-poster.webp`,
+    video: `${ASSET_ROOT}/neos/${id}-spin-30fps.webm`
+}));
 const ALLOWED_REFERENCE_IDS = new Set([
     'average_human',
     'statue_of_liberty',
@@ -118,49 +129,45 @@ function renderCards(neos) {
     neos.forEach(neo => {
         grid.appendChild(createNeoCard(neo));
     });
+    window.NeoMotion?.observe(grid);
+}
+
+function getNeoAsset(neo) {
+    const seed = seedFromString(neo.visualization?.asteroid_shape_seed || neo.neo_id || neo.name || 'neo');
+    return NEO_ASSETS[seed % NEO_ASSETS.length];
+}
+
+function referenceClassName(comparison) {
+    const rendered = REFERENCE_ASSETS[comparison.id] ? ' reference-render' : '';
+    const tiny = comparison.ratio > 40 ? ' reference-tiny' : '';
+    return `reference-object reference-${comparison.category} reference-${comparison.id}${rendered}${tiny}`;
 }
 
 function createNeoCard(neo) {
     const card = document.createElement('article');
     card.className = 'neo-card';
 
-    const visualization = neo.visualization || {};
     const metrics = neo.metrics || {};
     const ranking = neo.ranking || {};
     const approach = neo.close_approach || {};
     const comparison = getDisplayComparison(neo);
     const visualVars = getVisualVariables(neo, comparison);
+    const asset = getNeoAsset(neo);
 
     card.style.setProperty('--asteroid-size', `${visualVars.asteroidSize}px`);
     card.style.setProperty('--reference-size', `${visualVars.referenceSize}px`);
-    card.style.setProperty('--blob-radius', visualVars.blobRadius);
-    card.style.setProperty('--spin-speed', `${visualVars.spinSpeed}s`);
-    card.style.setProperty('--spin-delay', `${visualVars.spinDelay}s`);
-    card.style.setProperty('--float-speed', `${visualVars.floatSpeed}s`);
-    card.style.setProperty('--float-delay', `${visualVars.floatDelay}s`);
-    card.style.setProperty('--asteroid-hue', `${visualVars.hue}deg`);
-    card.style.setProperty('--asteroid-saturation', `${visualVars.saturation}%`);
-    card.style.setProperty('--asteroid-lightness', `${visualVars.lightness}%`);
-    card.style.setProperty('--asteroid-highlight-x', `${visualVars.highlightX}%`);
-    card.style.setProperty('--asteroid-highlight-y', `${visualVars.highlightY}%`);
-    card.style.setProperty('--crater-one-x', `${visualVars.craterOneX}%`);
-    card.style.setProperty('--crater-one-y', `${visualVars.craterOneY}%`);
-    card.style.setProperty('--crater-two-x', `${visualVars.craterTwoX}%`);
-    card.style.setProperty('--crater-two-y', `${visualVars.craterTwoY}%`);
-    card.style.setProperty('--crater-three-x', `${visualVars.craterThreeX}%`);
-    card.style.setProperty('--crater-three-y', `${visualVars.craterThreeY}%`);
-    card.style.setProperty('--asteroid-scale-x', visualVars.scaleX);
-    card.style.setProperty('--asteroid-scale-y', visualVars.scaleY);
-    card.style.setProperty('--asteroid-tilt', `${visualVars.tilt}deg`);
+    card.style.setProperty('--reference-aspect', visualVars.referenceAspect);
 
     card.innerHTML = `
         <div class="visual-panel" aria-hidden="true">
             <div class="asteroid-wrap">
-                <div class="asteroid"></div>
+                <div class="asteroid">
+                    <img class="neo-image" src="${asset.poster}" data-spin-src="${asset.video}" alt="" decoding="async">
+                </div>
             </div>
             <div class="reference-marker">
                 <div class="reference-scale-line"></div>
-                <div class="reference-object reference-${escapeAttribute(comparison.category)} reference-${escapeAttribute(comparison.id)} ${comparison.ratio > 40 ? 'reference-tiny' : ''}" title="${escapeAttribute(comparison.name)}">
+                <div class="${escapeAttribute(referenceClassName(comparison))}" title="${escapeAttribute(comparison.name)}">
                     ${createReferenceMarkup(comparison)}
                 </div>
             </div>
@@ -219,9 +226,10 @@ function updateCardComparison(card, neo, referenceId) {
 
     card.style.setProperty('--asteroid-size', `${visualVars.asteroidSize}px`);
     card.style.setProperty('--reference-size', `${visualVars.referenceSize}px`);
+    card.style.setProperty('--reference-aspect', visualVars.referenceAspect);
     card.querySelector('.comparison-label').textContent = comparison.label;
 
-    referenceObject.className = `reference-object reference-${comparison.category} reference-${comparison.id} ${comparison.ratio > 40 ? 'reference-tiny' : ''}`;
+    referenceObject.className = referenceClassName(comparison);
     referenceObject.title = comparison.name;
     referenceObject.innerHTML = createReferenceMarkup(comparison);
     card.querySelector('.reference-picker-button span').textContent = comparison.name;
@@ -310,28 +318,10 @@ function createReferenceShapeMarkup(category) {
 }
 
 function createReferenceMarkup(comparison) {
-    const assetPath = REFERENCE_ASSETS[comparison.id];
+    const asset = REFERENCE_ASSETS[comparison.id];
 
-    if (assetPath) {
-        return `<img class="reference-image" src="${escapeAttribute(assetPath)}" alt="">`;
-    }
-
-    if (comparison.id === 'statue_of_liberty') {
-        return `
-            <svg class="reference-svg reference-svg-statue" viewBox="0 0 72 160" aria-hidden="true" focusable="false">
-                <path d="M20 142h34v18H20z" />
-                <path d="M26 124h22v18H26z" />
-                <path d="M31 47h15l8 77H22z" />
-                <path d="M34 34h10v13H34z" />
-                <path d="M39 22l3 9 9-5-5 9 10 3-11 2-2 9-5-8-10 7 5-11-9-4 10-2z" />
-                <path d="M31 49l-9 39 9 5 9-37z" />
-                <path d="M43 48l13 33 8-7-15-29z" />
-                <path d="M23 17l-7 2 13 35 7-3z" />
-                <path d="M12 13h17v6H12z" />
-                <path d="M15 8h11l-2 5h-7z" />
-                <path d="M20 0c6 6 6 11 1 17-6-5-6-10-1-17z" />
-            </svg>
-        `;
+    if (asset) {
+        return `<img class="reference-image" src="${asset.src}" alt="" decoding="async">`;
     }
 
     if (comparison.id === 'average_human') {
@@ -351,39 +341,21 @@ function getVisualVariables(neo, comparison) {
     const visualization = neo.visualization || {};
     const diameter = Number(metrics.diameter_avg_m || visualization.diameter_avg_m || 50);
     const ratio = Number.isFinite(Number(comparison.ratio)) ? Number(comparison.ratio) : 1;
-    const seed = seedFromString(visualization.asteroid_shape_seed || neo.neo_id || neo.name || 'neo');
-    const referenceMeters = diameter / Math.max(ratio, 0.01);
+    const referenceMeters = diameter / (ratio > 0 ? ratio : 1);
     const largestMeters = Math.max(diameter, referenceMeters);
-    const sceneMaxPx = 220;
+    // Fit the mountain's wider silhouette without stretching it or changing the size ratio.
+    const sceneMaxPx = comparison.id === 'mount_everest' ? 120 : 220;
     const sceneMinPx = 8;
 
     return {
         asteroidSize: clamp((diameter / largestMeters) * sceneMaxPx, sceneMinPx, sceneMaxPx),
         referenceSize: clamp((referenceMeters / largestMeters) * sceneMaxPx, sceneMinPx, sceneMaxPx),
-        blobRadius: `${35 + (seed % 28)}% ${65 - (seed % 24)}% ${38 + ((seed * 3) % 28)}% ${62 - ((seed * 5) % 24)}%`,
-        spinSpeed: 5 + (seed % 19),
-        spinDelay: -1 * (seed % 11),
-        floatSpeed: 3.8 + ((seed % 18) / 10),
-        floatDelay: -1 * ((seed % 13) / 3),
-        hue: 24 + (seed % 22),
-        saturation: 17 + (seed % 15),
-        lightness: 42 + (seed % 11),
-        highlightX: 24 + (seed % 45),
-        highlightY: 18 + ((seed * 7) % 38),
-        craterOneX: 18 + ((seed * 5) % 56),
-        craterOneY: 18 + ((seed * 11) % 54),
-        craterTwoX: 22 + ((seed * 13) % 52),
-        craterTwoY: 26 + ((seed * 17) % 48),
-        craterThreeX: 28 + ((seed * 19) % 46),
-        craterThreeY: 32 + ((seed * 23) % 42),
-        scaleX: (0.88 + ((seed % 17) / 100)).toFixed(2),
-        scaleY: (0.9 + (((seed * 3) % 16) / 100)).toFixed(2),
-        tilt: -10 + (seed % 21)
+        referenceAspect: REFERENCE_ASSETS[comparison.id]?.aspectRatio || 1
     };
 }
 
 function measurementWord(category) {
-    return 'height';
+    return category === 'mountain' ? 'summit elevation' : 'height';
 }
 
 function normalizeCategory(category = '') {

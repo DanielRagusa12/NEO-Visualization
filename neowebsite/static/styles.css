@@ -98,6 +98,14 @@ a {
     line-height: 1.5;
 }
 
+.visual-note {
+    max-width: 78ch;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -156,7 +164,8 @@ a {
     width: min(100%, 600px);
 }
 
-.sort-button {
+.sort-button,
+.motion-button {
     border: 1px solid var(--line);
     border-radius: 3px;
     padding: 9px 10px;
@@ -172,11 +181,33 @@ a {
 }
 
 .sort-button:hover,
-.sort-button.active {
+.sort-button.active,
+.motion-button:hover:not(:disabled) {
     transform: none;
     color: #15120d;
     border-color: var(--paper);
     background: var(--paper);
+}
+
+.sort-button:focus-visible,
+.motion-button:focus-visible {
+    outline: 2px solid var(--paper);
+    outline-offset: 3px;
+}
+
+.motion-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin: -4px 0 16px;
+}
+
+.motion-controls[hidden] {
+    display: none;
+}
+
+.motion-button:disabled {
+    color: var(--muted);
+    cursor: default;
 }
 
 .status-message {
@@ -268,30 +299,30 @@ a {
     height: var(--asteroid-size);
     min-width: 8px;
     min-height: 8px;
-    animation: floaty var(--float-speed) ease-in-out infinite;
-    animation-delay: var(--float-delay);
 }
 
 .asteroid {
+    position: relative;
     width: 100%;
     height: 100%;
-    border-radius: var(--blob-radius);
-    background:
-        radial-gradient(circle at var(--asteroid-highlight-x) var(--asteroid-highlight-y), rgba(255, 245, 225, 0.46), transparent 12%),
-        radial-gradient(circle at var(--crater-one-x) var(--crater-one-y), rgba(0, 0, 0, 0.24), transparent 13%),
-        radial-gradient(circle at var(--crater-two-x) var(--crater-two-y), rgba(0, 0, 0, 0.2), transparent 10%),
-        radial-gradient(circle at var(--crater-three-x) var(--crater-three-y), rgba(255, 255, 255, 0.08), transparent 9%),
-        linear-gradient(135deg,
-            hsl(var(--asteroid-hue), var(--asteroid-saturation), calc(var(--asteroid-lightness) + 22%)) 0%,
-            hsl(var(--asteroid-hue), var(--asteroid-saturation), var(--asteroid-lightness)) 44%,
-            hsl(var(--asteroid-hue), var(--asteroid-saturation), calc(var(--asteroid-lightness) - 18%)) 100%);
-    box-shadow:
-        inset -18px -22px 30px rgba(0, 0, 0, 0.42),
-        inset 10px 10px 18px rgba(255, 255, 255, 0.1),
-        0 18px 36px rgba(0, 0, 0, 0.42);
-    transform: rotate(var(--asteroid-tilt)) scale(var(--asteroid-scale-x), var(--asteroid-scale-y));
-    animation: tumble var(--spin-speed) linear infinite;
-    animation-delay: var(--spin-delay);
+}
+
+.neo-image,
+.neo-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.neo-video {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.neo-video[hidden] {
+    display: none;
 }
 
 .reference-marker {
@@ -442,11 +473,15 @@ a {
     box-shadow: none;
 }
 
+.reference-object.reference-render:not(.reference-tiny) {
+    display: block;
+    width: calc(var(--reference-size) * var(--reference-aspect));
+}
+
 .reference-image {
     display: block;
-    width: auto;
+    width: 100%;
     height: 100%;
-    max-width: 96px;
     object-fit: contain;
     filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.35));
 }
@@ -1019,15 +1054,6 @@ a {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
-}
-
-@keyframes tumble {
-    to { transform: rotate(calc(360deg + var(--asteroid-tilt))) scale(var(--asteroid-scale-x), var(--asteroid-scale-y)); }
-}
-
-@keyframes floaty {
-    0%, 100% { transform: translateY(0) rotateX(0deg); }
-    50% { transform: translateY(-10px) rotateX(8deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {

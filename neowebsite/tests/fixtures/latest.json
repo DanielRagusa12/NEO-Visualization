@@ -1,0 +1,215 @@
+{
+  "window_start_date": "2026-10-29",
+  "window_end_date": "2026-11-04",
+  "summary": {
+    "returned_count": 6,
+    "candidate_count": 6,
+    "largest_neo_name": "Demo asteroid 6",
+    "closest_neo_name": "Demo asteroid 2"
+  },
+  "reference_objects": [
+    {
+      "id": "average_human",
+      "name": "Average human",
+      "category": "person",
+      "height_m": 1.7
+    },
+    {
+      "id": "statue_of_liberty",
+      "name": "Statue of Liberty",
+      "category": "landmark",
+      "height_m": 93
+    },
+    {
+      "id": "eiffel_tower",
+      "name": "Eiffel Tower",
+      "category": "landmark",
+      "height_m": 330
+    },
+    {
+      "id": "burj_khalifa",
+      "name": "Burj Khalifa",
+      "category": "landmark",
+      "height_m": 828
+    },
+    {
+      "id": "mount_everest",
+      "name": "Mount Everest",
+      "category": "mountain",
+      "height_m": 8849
+    }
+  ],
+  "neos": [
+    {
+      "neo_id": "demo-1",
+      "name": "Demo asteroid 1",
+      "metrics": {
+        "diameter_avg_m": 180,
+        "miss_distance_lunar": 4.2,
+        "velocity_kph": 42000,
+        "is_hazardous": false
+      },
+      "ranking": {
+        "visual_interest_rank": 1,
+        "size_rank": 4,
+        "closest_rank": 3,
+        "fastest_rank": 4
+      },
+      "close_approach": {
+        "date": "2026-10-29",
+        "days_until": 0
+      },
+      "visualization": {
+        "closest_reference_id": "statue_of_liberty"
+      },
+      "nasa_jpl_url": "#"
+    },
+    {
+      "neo_id": "demo-2",
+      "name": "Demo asteroid 2",
+      "metrics": {
+        "diameter_avg_m": 22,
+        "miss_distance_lunar": 0.8,
+        "velocity_kph": 19500,
+        "is_hazardous": false
+      },
+      "ranking": {
+        "visual_interest_rank": 2,
+        "size_rank": 6,
+        "closest_rank": 1,
+        "fastest_rank": 6
+      },
+      "close_approach": {
+        "date": "2026-10-30",
+        "days_until": 1
+      },
+      "visualization": {
+        "closest_reference_id": "average_human"
+      },
+      "nasa_jpl_url": "#"
+    },
+    {
+      "neo_id": "demo-3",
+      "name": "Demo asteroid 3",
+      "metrics": {
+        "diameter_avg_m": 760,
+        "miss_distance_lunar": 12.4,
+        "velocity_kph": 68000,
+        "is_hazardous": true
+      },
+      "ranking": {
+        "visual_interest_rank": 3,
+        "size_rank": 2,
+        "closest_rank": 5,
+        "fastest_rank": 2
+      },
+      "close_approach": {
+        "date": "2026-10-31",
+        "days_until": 2
+      },
+      "visualization": {
+        "closest_reference_id": "burj_khalifa"
+      },
+      "nasa_jpl_url": "#"
+    },
+    {
+      "neo_id": "demo-4",
+      "name": "Demo asteroid 4",
+      "metrics": {
+        "diameter_avg_m": 340,
+        "miss_distance_lunar": 7.1,
+        "velocity_kph": 31000,
+        "is_hazardous": false
+      },
+      "ranking": {
+        "visual_interest_rank": 4,
+        "size_rank": 3,
+        "closest_rank": 4,
+        "fastest_rank": 5
+      },
+      "close_approach": {
+        "date": "2026-11-01",
+        "days_until": 3
+      },
+      "visualization": {
+        "closest_reference_id": "eiffel_tower"
+      },
+      "nasa_jpl_url": "#"
+    },
+    {
+      "neo_id": "demo-5",
+      "name": "Demo asteroid 5",
+      "metrics": {
+        "diameter_avg_m": 85,
+        "miss_distance_lunar": 2.6,
+        "velocity_kph": 54000,
+        "is_hazardous": false
+      },
+      "ranking": {
+        "visual_interest_rank": 5,
+        "size_rank": 5,
+        "closest_rank": 2,
+        "fastest_rank": 3
+      },
+      "close_approach": {
+        "date": "2026-11-02",
+        "days_until": 4
+      },
+      "visualization": {
+        "closest_reference_id": "statue_of_liberty"
+      },
+      "nasa_jpl_url": "#"
+    },
+    {
+      "neo_id": "demo-6",
+      "name": "Demo asteroid 6",
+      "metrics": {
+        "diameter_avg_m": 1200,
+        "miss_distance_lunar": 20.3,
+        "velocity_kph": 82000,
+        "is_hazardous": true
+      },
+      "ranking": {
+        "visual_interest_rank": 6,
+        "size_rank": 1,
+        "closest_rank": 6,
+        "fastest_rank": 1
+      },
+      "close_approach": {
+        "date": "2026-11-03",
+        "days_until": 5
+      },
+      "visualization": {
+        "closest_reference_id": "mount_everest"
+      },
+      "nasa_jpl_url": "#"
+    }
+  ],
+  "sort_options": [
+    {
+      "id": "visual_interest",
+      "label": "Most interesting",
+      "field": "ranking.visual_interest_rank",
+      "direction": "asc"
+    },
+    {
+      "id": "largest",
+      "label": "Largest",
+      "field": "metrics.diameter_avg_m",
+      "direction": "desc"
+    },
+    {
+      "id": "closest",
+      "label": "Closest",
+      "field": "metrics.miss_distance_lunar",
+      "direction": "asc"
+    },
+    {
+      "id": "fastest",
+      "label": "Fastest",
+      "field": "metrics.velocity_kph",
+      "direction": "desc"
+    }
+  ],
+  "_fixture": "Synthetic local/test data, not NASA observations."
+}

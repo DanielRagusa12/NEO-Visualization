@@ -1,0 +1,89 @@
+{
+  "source": {
+    "file": "neo-asset-studio.blend",
+    "sha256": "ca20303e5ccbfaa82165270d3d91d43d19354360f700e06c3c17b881d784e3ad",
+    "blender_version": "5.2.3 LTS"
+  },
+  "provenance": "Original stylized geometry and procedural materials authored for this project; no downloaded models or external generation services. Shapes, anatomy, terrain, rotation axes, and periods are illustrative.",
+  "asset_root": "../static/assets/models/v1",
+  "assets": {
+    "neos/angular-poster.webp": {
+      "sha256": "c70d9a46689067fa411d16a0904b2dffd220224b9ed451522574a8dd4e048eca",
+      "bytes": 5346
+    },
+    "neos/angular-spin-30fps.webm": {
+      "sha256": "0c28d1c41b82508bf204bdb51826828aa6a00bf4f7ad6113b4a51368fe3cc094",
+      "bytes": 698836,
+      "frames": 420,
+      "fps": 30,
+      "duration_seconds": 14.0,
+      "alpha_verified": true
+    },
+    "neos/cratered-poster.webp": {
+      "sha256": "6ae4525eaab438fbe88d1819ff7d41bc013c38fdfd47c4d031a5d1833fe2a51b",
+      "bytes": 4970
+    },
+    "neos/cratered-spin-30fps.webm": {
+      "sha256": "13fd1233dcd787083b2abe85b4115ad5b9d8684687a508db3ddb80ca7a0e3a74",
+      "bytes": 661694,
+      "frames": 360,
+      "fps": 30,
+      "duration_seconds": 12.0,
+      "alpha_verified": true
+    },
+    "neos/elongated-poster.webp": {
+      "sha256": "054bcaa3fcdd386ab8f22f7f69fd0662636c0eb3039bde697be840c59f53caa5",
+      "bytes": 3804
+    },
+    "neos/elongated-spin-30fps.webm": {
+      "sha256": "4e5cbdf3a1e2950fa531d780ed436d429d4b508a53e271bd1957a5eba2045bf6",
+      "bytes": 695983,
+      "frames": 480,
+      "fps": 30,
+      "duration_seconds": 16.0,
+      "alpha_verified": true
+    },
+    "neos/wedge-poster.webp": {
+      "sha256": "520a4db2684e8a6ae8995cd26ccbf0e6f96c5901bffa3afaa4d7b168f1b86026",
+      "bytes": 3998
+    },
+    "neos/wedge-spin-30fps.webm": {
+      "sha256": "897e51140b00464f9b8e46d7f2a290ca215eb39d9961c7c10db8342ce7a89801",
+      "bytes": 780406,
+      "frames": 540,
+      "fps": 30,
+      "duration_seconds": 18.0,
+      "alpha_verified": true
+    },
+    "references/burj-khalifa.png": {
+      "sha256": "3348311102600e0c2625c1466d3b34bd245704a4f060b40b13b2503863d5a9bf",
+      "bytes": 32087,
+      "width": 71,
+      "height": 440
+    },
+    "references/eiffel-tower.png": {
+      "sha256": "9ec152ac18b2e729a090a64ae32cde3410253210179493cd0555ec55f123bb4a",
+      "bytes": 83387,
+      "width": 217,
+      "height": 440
+    },
+    "references/everest.png": {
+      "sha256": "5b3d37c936d8d8ed434fe0782c86bd5e8ef2fc9175dff2d76fe29a55d033151c",
+      "bytes": 129900,
+      "width": 480,
+      "height": 314
+    },
+    "references/human.png": {
+      "sha256": "bea2a4a5e9abe285f683b1a100409610a187e950fd2271eb5507840cfe8edb56",
+      "bytes": 56256,
+      "width": 168,
+      "height": 440
+    },
+    "references/statue-of-liberty.png": {
+      "sha256": "8f8b73027a7cc23e85ed805e935ac238b290c39b28cc46706884fb5d5cf45919",
+      "bytes": 65823,
+      "width": 144,
+      "height": 440
+    }
+  }
+}
