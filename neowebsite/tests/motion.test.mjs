@@ -102,6 +102,7 @@ function setup(options = {}) {
     return {
         videos, control, document, preference, observers, resizers,
         observe(images) { window.NeoMotion.observe({ querySelectorAll: () => images }); },
+        refresh() { window.NeoMotion.refresh(); },
         ready(video = videos[0]) { video.readyState = 4; video.emit('loadeddata'); video.emit('playing'); },
         reduce(value) { preference.matches = value; preference.dispatchEvent(new Event('change')); }
     };
@@ -121,6 +122,14 @@ test('only visible, sufficiently large asteroids get a video source', () => {
     assert.equal(visible.dataset.spinning, 'true');
     assert.equal(visible.style.visibility, 'hidden');
     assert.equal(app.videos[0].hidden, false);
+});
+
+test('empty feeds hide motion controls and a later load restores them', () => {
+    const app = setup();
+    app.observe([]);
+    assert.equal(app.control.parentElement.hidden, true);
+    app.observe([new Image()]);
+    assert.equal(app.control.parentElement.hidden, false);
 });
 
 test('reduced motion loads no video and switching the preference stops playback', () => {
@@ -182,6 +191,20 @@ test('resizing a comparison starts or stops decoding at the size threshold', () 
     image.size = 8;
     app.resizers[0].resize(image);
     assert.equal(app.videos[0].paused, true);
+});
+
+test('reference changes can refresh playback immediately without waiting for an observer', () => {
+    const app = setup();
+    const image = new Image();
+    app.observe([image]);
+    app.ready();
+    image.size = 8;
+    app.refresh();
+    assert.equal(app.videos[0].paused, true);
+    assert.equal(image.style.visibility, 'visible');
+    image.size = 120;
+    app.refresh();
+    assert.equal(app.videos[0].paused, false);
 });
 
 test('unsupported codecs, missing alpha, and failed playback keep the poster', async () => {

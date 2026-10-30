@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore near-Earth objects from NASA's NeoWs feed, with estimated diameters compared to familiar landmarks.">
     <title>NEO Field Log</title>
-    <link rel="stylesheet" href="styles.css?v=models-v1-liberty">
+    <link rel="stylesheet" href="styles.css?v=field-log-v4">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
@@ -13,54 +14,77 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main class="page-shell">
-        <section class="hero" aria-labelledby="page-title">
-            <p class="eyebrow">Near-Earth Object Field Log</p>
-            <h1 id="page-title">Close approaches this week</h1>
-            <p class="hero-copy">NASA NeoWs observations ranked by size, distance, speed, and scale against familiar vertical references.</p>
-            <p class="visual-note">Models and rotation periods are illustrative, not measured reconstructions. Tiny items are enlarged for visibility. Everest comparisons use summit elevation above sea level, not local mountain relief.</p>
+    <a class="skip-link" href="#observations">Skip to observations</a>
+    <div class="page-shell">
+        <header id="top" class="masthead">
+            <a class="wordmark" href="#top" aria-label="NEO Field Log home"><strong>NEO</strong><span>FIELD LOG</span></a>
+            <p class="masthead-note">NASA NeoWs observations</p>
+        </header>
 
-            <div class="summary-grid" aria-label="Dataset summary">
-                <article class="summary-card">
-                    <span class="summary-label">Window</span>
-                    <strong id="windowRange">Loading...</strong>
-                </article>
-                <article class="summary-card">
-                    <span class="summary-label">Showing</span>
-                    <strong id="returnedCount">--</strong>
-                </article>
-                <article class="summary-card">
-                    <span class="summary-label">Largest</span>
-                    <strong id="largestNeo">--</strong>
-                </article>
-                <article class="summary-card">
-                    <span class="summary-label">Closest Pass</span>
-                    <strong id="closestNeo">--</strong>
-                </article>
-            </div>
-        </section>
+        <main>
+            <section class="hero" aria-labelledby="page-title">
+                <div>
+                    <h1 id="page-title">Near-Earth objects</h1>
+                    <p class="hero-copy">This week's close approaches from NASA NeoWs, with estimated diameters compared to familiar landmarks.</p>
+                </div>
+                <div class="summary-grid" aria-label="Dataset summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Observation window</span>
+                        <strong id="windowRange">Loading...</strong>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Objects shown</span>
+                        <strong id="returnedCount">--</strong>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Largest object</span>
+                        <strong id="largestNeo">--</strong>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Closest approach</span>
+                        <strong id="closestNeo">--</strong>
+                    </div>
+                </div>
+            </section>
 
-        <section class="controls" aria-label="Sort controls">
-            <div>
-                <p class="section-kicker">Sort</p>
-                <h2>Reorder observations.</h2>
-            </div>
-            <div id="sortControls" class="sort-controls"></div>
-        </section>
+            <section id="observations" class="observations" aria-labelledby="observations-title" tabindex="-1">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-kicker">The weekly selection</p>
+                        <h2 id="observations-title">Observations</h2>
+                    </div>
+                    <div class="motion-controls" hidden>
+                        <button id="motionToggle" class="motion-button" type="button" aria-controls="neoGrid">Pause asteroid motion</button>
+                    </div>
+                </div>
+                <div class="controls" role="region" aria-label="Sort controls">
+                    <span class="control-label">Order by</span>
+                    <div id="sortControls" class="sort-controls"></div>
+                </div>
 
-        <div class="motion-controls" hidden>
-            <button id="motionToggle" class="motion-button" type="button" aria-controls="neoGrid">Pause asteroid motion</button>
-        </div>
+                <p class="collection-note">Estimated sizes. Illustrative shapes and rotation. <a href="#comparison-explanation">Reading guide</a></p>
 
-        <section id="statusMessage" class="status-message" role="status">
-            <span class="loader"></span>
-            Loading this week's NEO data...
-        </section>
+                <section id="statusMessage" class="status-message" role="status">
+                    <span class="loader" aria-hidden="true"></span>
+                    Loading this week's NEO data...
+                </section>
+                <button id="retryLoad" class="retry-button" type="button" aria-controls="neoGrid" hidden>Retry loading observations</button>
+                <div id="neoGrid" class="neo-grid" role="region" aria-label="Near-Earth object cards"></div>
+            </section>
 
-        <section id="neoGrid" class="neo-grid" aria-label="Near-Earth object cards"></section>
-    </main>
+            <details id="comparison-notes" class="reading-note">
+                <summary>How to read these comparisons</summary>
+                <p id="comparison-explanation" class="visual-note">Models and rotation periods are illustrative, not measured reconstructions. Tiny items are enlarged for visibility. Everest comparisons use summit elevation above sea level, not local mountain relief.</p>
+                <p class="visual-note">One lunar distance is the average distance between Earth and the Moon. A potentially hazardous classification describes an object's size and orbit, not a prediction of an impact.</p>
+            </details>
+        </main>
 
-    <script src="motion.js?v=models-v1-liberty"></script>
-    <script src="main.js?v=models-v1-liberty"></script>
+        <footer class="site-footer">
+            <p>NASA data. Illustrated for perspective.</p>
+            <a href="#top">Back to top ↑</a>
+        </footer>
+    </div>
+    <script src="motion.js?v=field-log-v4"></script>
+    <script src="main.js?v=field-log-v4"></script>
 </body>
 </html>

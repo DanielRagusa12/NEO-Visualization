@@ -106,6 +106,7 @@
         });
         ensureControl();
         images = [...grid.querySelectorAll('.neo-image[data-spin-src]')];
+        if (control) control.parentElement.hidden = images.length === 0;
         images.forEach(image => {
             updateVisibility(image);
             image.dataset.spinning = 'false';
@@ -174,7 +175,12 @@
         syncAll();
     }
 
-    window.NeoMotion = { observe };
+    function refresh() {
+        images.forEach(updateVisibility);
+        syncAll();
+    }
+
+    window.NeoMotion = { observe, refresh };
     document.addEventListener('visibilitychange', syncAll);
     preference.addEventListener('change', syncAll);
 })();

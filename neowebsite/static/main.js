@@ -24,17 +24,30 @@ const state = {
     data: null,
     neos: [],
     referenceObjects: new Map(),
-    activeSortId: 'visual_interest'
+    activeSortId: 'visual_interest',
+    referenceSelections: new Map(),
+    loading: false
 };
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('retryLoad')?.addEventListener('click', init);
+    init();
+});
 
 async function init() {
+    if (state.loading) return;
+    state.loading = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    const grid = document.getElementById('neoGrid');
+    grid.setAttribute('aria-busy', 'true');
+    showStatus("Loading this week's NEO data...", { busy: true });
+
     try {
-        const response = await fetch(DATA_URL);
+        const response = await fetch(DATA_URL, { signal: controller.signal });
 
         if (!response.ok) {
-            throw new Error(`Data endpoint returned ${response.status}`);
+            throw new Error(`The observation feed returned HTTP ${response.status}.`);
         }
 
         state.data = await response.json();
@@ -48,9 +61,23 @@ async function init() {
         renderSummary(state.data);
         renderSortControls(state.data.sort_options || []);
         renderCards(sortNeos(state.neos, state.activeSortId));
-        hideStatus();
+        if (state.neos.length === 0) {
+            showStatus('The feed returned no objects for this observation window. Try loading it again later.');
+        } else {
+            const retry = document.getElementById('retryLoad');
+            const moveFocus = retry && document.activeElement === retry;
+            hideStatus();
+            if (moveFocus) document.getElementById('observations')?.focus();
+        }
     } catch (error) {
-        showStatus(`Unable to load NEO data. ${error.message}`);
+        showStatus(error.name === 'AbortError'
+            ? 'The observation feed did not respond in time. Try loading it again.'
+            : `Unable to load NEO data. ${error.message} Check your connection and try again.`);
+    } finally {
+        clearTimeout(timeout);
+        state.loading = false;
+        grid.setAttribute('aria-busy', 'false');
+        document.getElementById('retryLoad')?.setAttribute('aria-disabled', 'false');
     }
 }
 
@@ -58,7 +85,7 @@ function renderSummary(data) {
     const summary = data.summary || {};
 
     setText('windowRange', `${formatDate(data.window_start_date)} - ${formatDate(data.window_end_date)}`);
-    setText('returnedCount', `${summary.returned_count || data.neos?.length || 0} of ${summary.candidate_count || '--'}`);
+    setText('returnedCount', `${summary.returned_count ?? data.neos?.length ?? 0} of ${summary.candidate_count ?? '--'}`);
     setText('largestNeo', summary.largest_neo_name || '--');
     setText('closestNeo', summary.closest_neo_name || '--');
 }
@@ -140,7 +167,7 @@ function getNeoAsset(neo) {
 function referenceClassName(comparison) {
     const rendered = REFERENCE_ASSETS[comparison.id] ? ' reference-render' : '';
     const tiny = comparison.ratio > 40 ? ' reference-tiny' : '';
-    return `reference-object reference-${comparison.category} reference-${comparison.id}${rendered}${tiny}`;
+    return `reference-object${rendered}${tiny}`;
 }
 
 function createNeoCard(neo) {
@@ -150,7 +177,7 @@ function createNeoCard(neo) {
     const metrics = neo.metrics || {};
     const ranking = neo.ranking || {};
     const approach = neo.close_approach || {};
-    const comparison = getDisplayComparison(neo);
+    const comparison = getDisplayComparison(neo, state.referenceSelections.get(String(neo.neo_id || neo.name || '')));
     const visualVars = getVisualVariables(neo, comparison);
     const asset = getNeoAsset(neo);
 
@@ -159,53 +186,58 @@ function createNeoCard(neo) {
     card.style.setProperty('--reference-aspect', visualVars.referenceAspect);
 
     card.innerHTML = `
+        <header class="card-heading">
+            <div class="card-topline">
+                <span class="rank-pill">#${escapeHtml(ranking.visual_interest_rank || '--')} in visual interest</span>
+                ${metrics.is_hazardous ? '<span class="hazard-pill">Potentially hazardous</span>' : ''}
+            </div>
+            <h3>${escapeHtml(neo.name || 'Unnamed NEO')}</h3>
+        </header>
         <div class="visual-panel" aria-hidden="true">
+            <span class="visual-kicker">Diameter / height comparison</span>
             <div class="asteroid-wrap">
                 <div class="asteroid">
                     <img class="neo-image" src="${asset.poster}" data-spin-src="${asset.video}" alt="" decoding="async">
                 </div>
+                <span class="object-label">Asteroid</span>
             </div>
             <div class="reference-marker">
-                <div class="reference-scale-line"></div>
-                <div class="${escapeAttribute(referenceClassName(comparison))}" title="${escapeAttribute(comparison.name)}">
+                <div class="${escapeAttribute(referenceClassName(comparison))}">
                     ${createReferenceMarkup(comparison)}
                 </div>
+                <span class="object-label">Reference</span>
             </div>
         </div>
         <div class="neo-content">
-            <div class="card-topline">
-                <span class="rank-pill">#${ranking.visual_interest_rank || '--'} Interesting</span>
-                ${metrics.is_hazardous ? '<span class="hazard-pill">Potentially hazardous</span>' : ''}
-            </div>
-            <h3>${escapeHtml(neo.name || 'Unnamed NEO')}</h3>
-            <div class="reference-select-label">
-                Compare against
-                <div class="reference-picker">
-                    <button class="reference-picker-button" type="button" aria-expanded="false">
-                        <span>${escapeHtml(comparison.name)}</span>
-                    </button>
-                    <div class="reference-picker-menu" role="listbox">
+            <div>
+                <label class="reference-select-label">
+                    <span>Compare against</span>
+                    <select class="reference-select" aria-label="Compare ${escapeAttribute(neo.name || 'this object')} against">
                         ${createReferenceOptions(comparison.id)}
-                    </div>
-                </div>
+                    </select>
+                </label>
+                <p class="comparison-label">${escapeHtml(comparison.label)}</p>
             </div>
-            <p class="comparison-label">${escapeHtml(comparison.label)}</p>
-            <div class="metric-grid">
-                ${metricMarkup('Avg Diameter', `${formatNumber(metrics.diameter_avg_m)} m`)}
-                ${metricMarkup('Closest Pass', `${formatNumber(metrics.miss_distance_lunar)} lunar`)}
+            <dl class="metric-grid">
+                ${metricMarkup('Avg diameter', `${formatNumber(metrics.diameter_avg_m)} m`)}
+                ${metricMarkup('Closest pass', `${formatNumber(metrics.miss_distance_lunar)} lunar`)}
                 ${metricMarkup('Speed', `${formatNumber(metrics.velocity_kph)} km/h`)}
                 ${metricMarkup('Approach', formatApproach(approach))}
-            </div>
-            <div class="neo-footer">
-                <span>#${ranking.size_rank || '--'} largest</span>
-                <span>#${ranking.closest_rank || '--'} closest</span>
-                <span>#${ranking.fastest_rank || '--'} fastest</span>
-                <a href="${escapeAttribute(neo.nasa_jpl_url || '#')}" target="_blank" rel="noreferrer">NASA JPL</a>
-            </div>
+            </dl>
         </div>
+        <footer class="neo-footer">
+            <div class="rank-summary" aria-label="Other rankings">
+                <span>#${escapeHtml(ranking.size_rank || '--')} largest</span>
+                <span>#${escapeHtml(ranking.closest_rank || '--')} closest</span>
+                <span>#${escapeHtml(ranking.fastest_rank || '--')} fastest</span>
+            </div>
+            <a href="${escapeAttribute(neo.nasa_jpl_url || '#')}" target="_blank" rel="noopener noreferrer" aria-label="NASA JPL details for ${escapeAttribute(neo.name || 'this object')}, opens in a new tab">NASA JPL ↗</a>
+        </footer>
     `;
 
-    setupReferencePicker(card, neo);
+    card.querySelector('.reference-select').addEventListener('change', event => {
+        updateCardComparison(card, neo, event.target.value);
+    });
 
     return card;
 }
@@ -213,14 +245,15 @@ function createNeoCard(neo) {
 function metricMarkup(label, value) {
     return `
         <div class="metric">
-            <span class="meta-label">${escapeHtml(label)}</span>
-            <strong>${escapeHtml(value)}</strong>
+            <dt class="meta-label">${escapeHtml(label)}</dt>
+            <dd>${escapeHtml(value)}</dd>
         </div>
     `;
 }
 
 function updateCardComparison(card, neo, referenceId) {
     const comparison = getDisplayComparison(neo, referenceId);
+    state.referenceSelections.set(String(neo.neo_id || neo.name || ''), comparison.id);
     const visualVars = getVisualVariables(neo, comparison);
     const referenceObject = card.querySelector('.reference-object');
 
@@ -230,51 +263,16 @@ function updateCardComparison(card, neo, referenceId) {
     card.querySelector('.comparison-label').textContent = comparison.label;
 
     referenceObject.className = referenceClassName(comparison);
-    referenceObject.title = comparison.name;
     referenceObject.innerHTML = createReferenceMarkup(comparison);
-    card.querySelector('.reference-picker-button span').textContent = comparison.name;
-
-    card.querySelectorAll('.reference-picker-option').forEach(option => {
-        option.classList.toggle('active', option.dataset.referenceId === comparison.id);
-        option.setAttribute('aria-selected', option.dataset.referenceId === comparison.id ? 'true' : 'false');
-    });
+    card.querySelector('.reference-select').value = comparison.id || '';
+    window.NeoMotion?.refresh?.();
 }
 
 function createReferenceOptions(selectedReferenceId) {
     return [...state.referenceObjects.values()].map(reference => `
-        <button class="reference-picker-option ${reference.id === selectedReferenceId ? 'active' : ''}" type="button" role="option" aria-selected="${reference.id === selectedReferenceId ? 'true' : 'false'}" data-reference-id="${escapeAttribute(reference.id)}">
-            ${escapeHtml(reference.name)}
-        </button>
+        <option value="${escapeAttribute(reference.id)}"${reference.id === selectedReferenceId ? ' selected' : ''}>${escapeHtml(reference.name)}</option>
     `).join('');
 }
-
-function setupReferencePicker(card, neo) {
-    const picker = card.querySelector('.reference-picker');
-    const button = card.querySelector('.reference-picker-button');
-    const options = card.querySelectorAll('.reference-picker-option');
-
-    button.addEventListener('click', event => {
-        event.stopPropagation();
-        const isOpen = picker.classList.toggle('open');
-        button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-
-    options.forEach(option => {
-        option.addEventListener('click', event => {
-            event.stopPropagation();
-            updateCardComparison(card, neo, option.dataset.referenceId);
-            picker.classList.remove('open');
-            button.setAttribute('aria-expanded', 'false');
-        });
-    });
-}
-
-document.addEventListener('click', () => {
-    document.querySelectorAll('.reference-picker.open').forEach(picker => {
-        picker.classList.remove('open');
-        picker.querySelector('.reference-picker-button').setAttribute('aria-expanded', 'false');
-    });
-});
 
 function getDisplayComparison(neo, selectedReferenceId) {
     const visualization = neo.visualization || {};
@@ -305,35 +303,11 @@ function getDisplayComparison(neo, selectedReferenceId) {
     };
 }
 
-function createReferenceShapeMarkup(category) {
-    if (category === 'person') {
-        return '<span class="reference-head"></span><span class="reference-torso"></span><span class="reference-base"></span>';
-    }
-
-    if (category === 'mountain') {
-        return '<span class="mountain-silhouette"></span>';
-    }
-
-    return '<span class="landmark-silhouette"></span>';
-}
-
 function createReferenceMarkup(comparison) {
     const asset = REFERENCE_ASSETS[comparison.id];
-
-    if (asset) {
-        return `<img class="reference-image" src="${asset.src}" alt="" decoding="async">`;
-    }
-
-    if (comparison.id === 'average_human') {
-        return `
-            <svg class="reference-svg reference-svg-human" viewBox="0 0 44 120" aria-hidden="true" focusable="false">
-                <path d="M22 2c8 0 14 6 14 14s-6 14-14 14S8 24 8 16 14 2 22 2z" />
-                <path d="M18 28h8c8 0 14 7 14 16v37h-9V45h-3v73h-9V45h-3v36H7V44c0-9 5-16 11-16z" />
-            </svg>
-        `;
-    }
-
-    return createReferenceShapeMarkup(comparison.category);
+    return asset
+        ? `<img class="reference-image" src="${asset.src}" alt="" decoding="async">`
+        : '<span class="reference-fallback">?</span>';
 }
 
 function getVisualVariables(neo, comparison) {
@@ -433,12 +407,19 @@ function setText(id, value) {
 
 function hideStatus() {
     document.getElementById('statusMessage').classList.add('hidden');
+    const retry = document.getElementById('retryLoad');
+    if (retry) retry.hidden = true;
 }
 
-function showStatus(message) {
+function showStatus(message, { busy = false } = {}) {
     const status = document.getElementById('statusMessage');
-    status.innerHTML = escapeHtml(message);
+    status.innerHTML = `${busy ? '<span class="loader" aria-hidden="true"></span>' : ''}${escapeHtml(message)}`;
     status.classList.remove('hidden');
+    const retry = document.getElementById('retryLoad');
+    if (retry) {
+        if (!busy) retry.hidden = false;
+        retry.setAttribute('aria-disabled', String(busy));
+    }
 }
 
 function escapeHtml(value) {
