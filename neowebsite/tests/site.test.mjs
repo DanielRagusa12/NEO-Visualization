@@ -100,6 +100,55 @@ test('comparison sizes remain bounded and Everest is labeled as summit elevation
     assert.equal(evaluate('formatRatio(0.001)'), '<0.01');
 });
 
+test('enlargement warnings explain both minimum-size clamps and update with selection', () => {
+    const { evaluate } = loadSite();
+    const reference = plain(evaluate('getVisualVariables(fixture.neos[5], getDisplayComparison(fixture.neos[5], "average_human"))'));
+    assert.match(reference.enlargementNote, /Reference enlarged.*not to scale/);
+    const asteroid = plain(evaluate('getVisualVariables(fixture.neos[1], getDisplayComparison(fixture.neos[1], "mount_everest"))'));
+    assert.match(asteroid.enlargementNote, /Asteroid enlarged.*not to scale/);
+    const card = evaluate('createNeoCard(fixture.neos[5])');
+    card.querySelector('.reference-select').listeners.get('change')({ target: { value: 'average_human' } });
+    assert.equal(card.querySelector('.scale-note').hidden, false);
+    assert.match(card.querySelector('.scale-note').textContent, /Reference enlarged/);
+    card.querySelector('.reference-select').listeners.get('change')({ target: { value: 'burj_khalifa' } });
+    assert.equal(card.querySelector('.scale-note').hidden, true);
+});
+
+test('the primary badge matches each sort without inventing a hazard rank', () => {
+    const { evaluate } = loadSite();
+    for (const [sort, expected] of [['visual_interest', '#1 in visual interest'], ['largest', '#4 largest'],
+        ['closest', '#3 closest'], ['fastest', '#4 fastest']]) {
+        assert.equal(evaluate(`rankLabel(fixture.neos[0], ${JSON.stringify(sort)})`), expected);
+    }
+    assert.equal(evaluate('rankLabel({ranking: {soonest_rank: 2}}, "soonest")'), '#2 soonest');
+    assert.equal(evaluate('rankLabel(fixture.neos[0], "hazardous")'), 'Grouped by hazard classification');
+    evaluate('state.activeSortId = "largest"');
+    assert.match(evaluate('createNeoCard(fixture.neos[0])').innerHTML, /class="rank-pill">#4 largest/);
+});
+
+test('freshness shows UTC update time and distinguishes old, expired, missing, and future timestamps', () => {
+    const { evaluate } = loadSite();
+    const now = 'Date.parse("2026-10-30T12:00:00Z")';
+    const check = data => plain(evaluate(`feedFreshness(${JSON.stringify(data)}, ${now})`));
+    const fresh = check({ fetched_at: '2026-10-30T10:00:00Z', window_end_date: '2026-11-04' });
+    assert.match(fresh.label, /Updated Oct 30, 2026.*10:00 UTC/);
+    assert.equal(fresh.warning, '');
+    assert.match(check({ fetched_at: '2026-10-28T10:00:00Z' }).warning, /36 hours/);
+    assert.match(check({ fetched_at: '2026-10-30T10:00:00Z', window_end_date: '2026-10-29' }).warning, /window has ended/);
+    assert.equal(check({ fetched_at: 'invalid' }).label, 'Update time unavailable');
+    assert.match(check({ fetched_at: '2026-10-31T10:00:00Z' }).warning, /in the future/);
+    assert.equal(evaluate('feedFreshness({window_end_date: "2026-11-04"}, Date.parse("2026-11-04T23:59:59Z")).warning'), '');
+    assert.match(evaluate('feedFreshness({window_end_date: "2026-11-04"}, Date.parse("2026-11-05T00:00:00Z")).warning'), /window has ended/);
+});
+
+test('approach dates remain absolute UTC dates rather than stale relative labels', () => {
+    const { evaluate } = loadSite();
+    assert.equal(evaluate('formatApproach({date: "2026-10-29", days_until: 0})'), 'Oct 29, 2026');
+    assert.equal(evaluate('formatApproach({date: "2026-10-29", days_until: 1})'), 'Oct 29, 2026');
+    assert.equal(evaluate('formatApproach({date: "invalid"})'), '--');
+    assert.equal(evaluate('formatApproach({})'), '--');
+});
+
 test('unavailable JSON preserves the accessible error state', async () => {
     const { evaluate, document } = loadSite();
     await evaluate('init()');

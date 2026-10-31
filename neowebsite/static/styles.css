@@ -8,6 +8,7 @@
     --line: #383838;
     --control-line: #777777;
     --accent: #eeeeee;
+    --warning: #ffd3b0;
     --canvas: #0a0a0a;
     --ink: #c7c7c7;
     --grid-line: #ffffff0a;
@@ -189,6 +190,34 @@ h1 {
     overflow-wrap: anywhere;
 }
 
+.summary-panel {
+    min-width: 0;
+}
+
+.feed-freshness, .scale-note {
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+.feed-freshness {
+    margin: var(--s3) 0 0;
+    padding-left: var(--s6);
+}
+
+.scale-note {
+    margin: var(--s2) 0 0;
+}
+
+.feed-warning {
+    margin: 0 0 var(--s5);
+    padding: var(--s3) var(--s4);
+    border: 1px solid #8e6147;
+    border-radius: 6px;
+    background: #35291f;
+    color: var(--warning);
+    font-size: 0.85rem;
+}
+
 /* Collection toolbar */
 .observations {
     scroll-margin-top: var(--s5);
@@ -335,7 +364,7 @@ h2 {
     padding: 3px var(--s2);
     border: 1px solid #8e6147;
     border-radius: 4px;
-    color: #ffd3b0;
+    color: var(--warning);
     background: #35291f;
 }
 
@@ -632,6 +661,9 @@ h3 {
     }
     .summary-card strong {
         font-size: 0.85rem;
+    }
+    .feed-freshness {
+        padding-left: 0;
     }
     .neo-grid {
         grid-template-columns: 1fr;

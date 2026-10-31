@@ -1,4 +1,5 @@
 const DATA_URL = '/data/latest.json';
+const FEED_STALE_AFTER_MS = 36 * 60 * 60 * 1000;
 
 const ASSET_ROOT = 'assets/models/v1';
 const REFERENCE_ASSETS = {
@@ -32,7 +33,10 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('retryLoad')?.addEventListener('click', init);
     init();
+    // Recheck age locally, without polling the data endpoint.
+    setInterval(refreshFeedAge, 60000);
 });
+document.addEventListener('visibilitychange', refreshFeedAge);
 
 async function init() {
     if (state.loading) return;
@@ -41,7 +45,7 @@ async function init() {
     const timeout = setTimeout(() => controller.abort(), 15000);
     const grid = document.getElementById('neoGrid');
     grid.setAttribute('aria-busy', 'true');
-    showStatus("Loading this week's NEO data...", { busy: true });
+    showStatus('Loading the observation feed...', { busy: true });
 
     try {
         const response = await fetch(DATA_URL, { signal: controller.signal });
@@ -88,6 +92,42 @@ function renderSummary(data) {
     setText('returnedCount', `${summary.returned_count ?? data.neos?.length ?? 0} of ${summary.candidate_count ?? '--'}`);
     setText('largestNeo', summary.largest_neo_name || '--');
     setText('closestNeo', summary.closest_neo_name || '--');
+    renderFreshness(data);
+}
+
+function feedFreshness(data, now = Date.now()) {
+    const fetched = Date.parse(data.fetched_at || '');
+    const windowEnd = Date.parse(`${data.window_end_date || ''}T00:00:00Z`) + 86400000;
+    const label = Number.isFinite(fetched)
+        ? `Updated ${new Intl.DateTimeFormat('en', {
+            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+            timeZone: 'UTC', timeZoneName: 'short', hourCycle: 'h23'
+        }).format(new Date(fetched))}`
+        : 'Update time unavailable';
+    let warning = '';
+    if (Number.isFinite(windowEnd) && now >= windowEnd) {
+        warning = 'This observation window has ended. The published feed may be outdated.';
+    } else if (Number.isFinite(fetched) && fetched > now + 300000) {
+        warning = 'The feed timestamp is in the future. Its age could not be verified.';
+    } else if (Number.isFinite(fetched) && now - fetched > FEED_STALE_AFTER_MS) {
+        warning = 'This feed is more than 36 hours old. It may not include the latest observations.';
+    }
+    return { label, warning };
+}
+
+function renderFreshness(data) {
+    const freshness = feedFreshness(data);
+    const stamp = document.getElementById('feedFreshness');
+    const warning = document.getElementById('feedWarning');
+    if (stamp && stamp.textContent !== freshness.label) stamp.textContent = freshness.label;
+    if (warning) {
+        if (warning.textContent !== freshness.warning) warning.textContent = freshness.warning;
+        warning.hidden = !freshness.warning;
+    }
+}
+
+function refreshFeedAge() {
+    if (!document.hidden && state.data) renderFreshness(state.data);
 }
 
 function renderSortControls(sortOptions) {
@@ -170,6 +210,19 @@ function referenceClassName(comparison) {
     return `reference-object${rendered}${tiny}`;
 }
 
+function rankLabel(neo, sortId = state.activeSortId) {
+    const ranks = {
+        visual_interest: ['visual_interest_rank', 'in visual interest'],
+        largest: ['size_rank', 'largest'],
+        closest: ['closest_rank', 'closest'],
+        fastest: ['fastest_rank', 'fastest'],
+        soonest: ['soonest_rank', 'soonest']
+    };
+    if (sortId === 'hazardous') return 'Grouped by hazard classification';
+    const config = ranks[sortId];
+    return config ? `#${neo.ranking?.[config[0]] || '--'} ${config[1]}` : 'Observation';
+}
+
 function createNeoCard(neo) {
     const card = document.createElement('article');
     card.className = 'neo-card';
@@ -188,7 +241,7 @@ function createNeoCard(neo) {
     card.innerHTML = `
         <header class="card-heading">
             <div class="card-topline">
-                <span class="rank-pill">#${escapeHtml(ranking.visual_interest_rank || '--')} in visual interest</span>
+                <span class="rank-pill">${escapeHtml(rankLabel(neo))}</span>
                 ${metrics.is_hazardous ? '<span class="hazard-pill">Potentially hazardous</span>' : ''}
             </div>
             <h3>${escapeHtml(neo.name || 'Unnamed NEO')}</h3>
@@ -217,12 +270,13 @@ function createNeoCard(neo) {
                     </select>
                 </label>
                 <p class="comparison-label">${escapeHtml(comparison.label)}</p>
+                <p class="scale-note"${visualVars.enlargementNote ? '' : ' hidden'}>${escapeHtml(visualVars.enlargementNote)}</p>
             </div>
             <dl class="metric-grid">
                 ${metricMarkup('Avg diameter', `${formatNumber(metrics.diameter_avg_m)} m`)}
                 ${metricMarkup('Closest pass', `${formatNumber(metrics.miss_distance_lunar)} lunar`)}
                 ${metricMarkup('Speed', `${formatNumber(metrics.velocity_kph)} km/h`)}
-                ${metricMarkup('Approach', formatApproach(approach))}
+                ${metricMarkup('Approach date, UTC', formatApproach(approach))}
             </dl>
         </div>
         <footer class="neo-footer">
@@ -261,6 +315,9 @@ function updateCardComparison(card, neo, referenceId) {
     card.style.setProperty('--reference-size', `${visualVars.referenceSize}px`);
     card.style.setProperty('--reference-aspect', visualVars.referenceAspect);
     card.querySelector('.comparison-label').textContent = comparison.label;
+    const note = card.querySelector('.scale-note');
+    note.textContent = visualVars.enlargementNote;
+    note.hidden = !visualVars.enlargementNote;
 
     referenceObject.className = referenceClassName(comparison);
     referenceObject.innerHTML = createReferenceMarkup(comparison);
@@ -321,10 +378,17 @@ function getVisualVariables(neo, comparison) {
     const sceneMaxPx = comparison.id === 'mount_everest' ? 120 : 220;
     const sceneMinPx = 8;
 
+    const asteroidPixels = (diameter / largestMeters) * sceneMaxPx;
+    const referencePixels = (referenceMeters / largestMeters) * sceneMaxPx;
+    const enlargementNote = asteroidPixels < sceneMinPx
+        ? 'Asteroid enlarged for visibility. The diagram is not to scale.'
+        : referencePixels < sceneMinPx
+            ? 'Reference enlarged for visibility. The diagram is not to scale.' : '';
     return {
-        asteroidSize: clamp((diameter / largestMeters) * sceneMaxPx, sceneMinPx, sceneMaxPx),
-        referenceSize: clamp((referenceMeters / largestMeters) * sceneMaxPx, sceneMinPx, sceneMaxPx),
-        referenceAspect: REFERENCE_ASSETS[comparison.id]?.aspectRatio || 1
+        asteroidSize: clamp(asteroidPixels, sceneMinPx, sceneMaxPx),
+        referenceSize: clamp(referencePixels, sceneMinPx, sceneMaxPx),
+        referenceAspect: REFERENCE_ASSETS[comparison.id]?.aspectRatio || 1,
+        enlargementNote
     };
 }
 
@@ -384,11 +448,11 @@ function formatDate(value) {
 }
 
 function formatApproach(approach) {
-    if (!approach.date) return '--';
-    const days = Number(approach.days_until);
-    if (days === 0) return 'Today';
-    if (days === 1) return 'Tomorrow';
-    return `${formatDate(approach.date)} (${days} days)`;
+    const date = new Date(`${approach.date || ''}T00:00:00Z`);
+    if (!Number.isFinite(date.getTime())) return '--';
+    return new Intl.DateTimeFormat('en', {
+        month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'
+    }).format(date);
 }
 
 function formatNumber(value) {

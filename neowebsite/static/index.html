@@ -25,25 +25,28 @@
             <section class="hero" aria-labelledby="page-title">
                 <div>
                     <h1 id="page-title">Near-Earth objects</h1>
-                    <p class="hero-copy">This week's close approaches from NASA NeoWs, with estimated diameters compared to familiar landmarks.</p>
+                    <p class="hero-copy">Close approaches from NASA NeoWs, with estimated diameters compared to familiar landmarks.</p>
                 </div>
-                <div class="summary-grid" aria-label="Dataset summary">
-                    <div class="summary-card">
-                        <span class="summary-label">Observation window</span>
-                        <strong id="windowRange">Loading...</strong>
+                <div class="summary-panel">
+                    <div class="summary-grid" aria-label="Dataset summary">
+                        <div class="summary-card">
+                            <span class="summary-label">Observation window</span>
+                            <strong id="windowRange">Loading...</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-label">Objects shown</span>
+                            <strong id="returnedCount">--</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-label">Largest object</span>
+                            <strong id="largestNeo">--</strong>
+                        </div>
+                        <div class="summary-card">
+                            <span class="summary-label">Closest approach</span>
+                            <strong id="closestNeo">--</strong>
+                        </div>
                     </div>
-                    <div class="summary-card">
-                        <span class="summary-label">Objects shown</span>
-                        <strong id="returnedCount">--</strong>
-                    </div>
-                    <div class="summary-card">
-                        <span class="summary-label">Largest object</span>
-                        <strong id="largestNeo">--</strong>
-                    </div>
-                    <div class="summary-card">
-                        <span class="summary-label">Closest approach</span>
-                        <strong id="closestNeo">--</strong>
-                    </div>
+                    <p id="feedFreshness" class="feed-freshness">Update time unavailable</p>
                 </div>
             </section>
 
@@ -64,9 +67,10 @@
 
                 <p class="collection-note">Estimated sizes. Illustrative shapes and rotation. <a href="#comparison-explanation">Reading guide</a></p>
 
+                <p id="feedWarning" class="feed-warning" role="status" hidden></p>
                 <section id="statusMessage" class="status-message" role="status">
                     <span class="loader" aria-hidden="true"></span>
-                    Loading this week's NEO data...
+                    Loading the observation feed...
                 </section>
                 <button id="retryLoad" class="retry-button" type="button" aria-controls="neoGrid" hidden>Retry loading observations</button>
                 <div id="neoGrid" class="neo-grid" role="region" aria-label="Near-Earth object cards"></div>
@@ -84,7 +88,7 @@
             <a href="#top">Back to top ↑</a>
         </footer>
     </div>
-    <script src="motion.js?v=field-log-v4"></script>
-    <script src="main.js?v=field-log-v4"></script>
+    <script src="motion.js?v=field-log-v5"></script>
+    <script src="main.js?v=field-log-v5"></script>
 </body>
 </html>
