@@ -63,11 +63,64 @@ def upload_to_s3(data, bucket_name, s3):
     print(f"Uploaded {filename} to S3 bucket {bucket_name}.")
     return filename
 
+def public_fields(record, names):
+    """Copy only named scalar fields, never unexpected nested data."""
+    result = {}
+    for name in names:
+        if name not in record:
+            continue
+        value = record[name]
+        if value is not None and not isinstance(value, (str, int, float, bool, Decimal)):
+            raise ValueError(f'Unexpected structured value in public field: {name}')
+        result[name] = value
+    return result
+
+
+def build_public_payload(data):
+    """Project the private history record onto the static site's public schema."""
+    public = public_fields(data, ('window_start_date', 'window_end_date', 'fetched_at'))
+    public['summary'] = public_fields(data.get('summary', {}), (
+        'candidate_count', 'returned_count', 'largest_neo_name', 'closest_neo_name'
+    ))
+    public['reference_objects'] = [
+        public_fields(reference, ('id', 'name', 'height_m', 'category'))
+        for reference in data.get('reference_objects', [])
+    ]
+    public['sort_options'] = [
+        public_fields(option, ('id', 'label', 'field', 'direction'))
+        for option in data.get('sort_options', [])
+    ]
+    sections = {
+        'metrics': ('diameter_min_m', 'diameter_max_m', 'diameter_avg_m',
+                    'miss_distance_km', 'miss_distance_lunar', 'velocity_kph',
+                    'days_until_close_approach', 'is_hazardous'),
+        'ranking': ('size_rank', 'closest_rank', 'fastest_rank',
+                    'soonest_rank', 'visual_interest_rank'),
+        'close_approach': ('date', 'days_until'),
+        'visualization': ('diameter_avg_m', 'closest_reference_id',
+                          'closest_reference_name', 'primary_reference_id',
+                          'primary_reference_name', 'primary_reference_ratio',
+                          'asteroid_shape_seed')
+    }
+    public['neos'] = []
+    for neo in data.get('neos', []):
+        item = public_fields(neo, ('neo_id', 'name', 'nasa_jpl_url'))
+        for section, names in sections.items():
+            item[section] = public_fields(neo.get(section, {}), names)
+        item['visualization']['comparison_ratios'] = [
+            public_fields(comparison, ('reference_id', 'reference_height_m',
+                                       'neo_to_reference_ratio'))
+            for comparison in neo.get('visualization', {}).get('comparison_ratios', [])
+        ]
+        public['neos'].append(item)
+    return public
+
+
 def publish_latest_data(data, bucket_name, object_key, s3):
     if not bucket_name:
         raise ValueError('WEBSITE_BUCKET_NAME is required')
 
-    data_json = json.dumps(data, default=str, separators=(',', ':'))
+    data_json = json.dumps(build_public_payload(data), default=str, separators=(',', ':'))
     s3.Object(bucket_name, object_key).put(
         Body=data_json,
         ContentType='application/json; charset=utf-8',
