@@ -274,6 +274,15 @@ test('styles remove legacy illustrations and use shared responsive comparison sc
     assert.equal(source.includes('setupReferencePicker'), false);
 });
 
+test('comparison objects use stable column centres instead of centring a variable-width group', () => {
+    const css = readFileSync(new URL('styles.css', staticRoot), 'utf8');
+    const stage = css.match(/\.visual-panel\s*\{([^}]+)\}/)[1];
+    assert.match(stage, /display: grid/);
+    assert.match(stage, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+    assert.match(stage, /justify-items: center/);
+    assert.match(stage, /align-items: end/);
+});
+
 test('every shipped model matches the reviewed asset manifest', () => {
     const manifest = JSON.parse(readFileSync(new URL('../art/manifest.json', import.meta.url), 'utf8'));
     const folder = new URL('assets/models/v1/', staticRoot);

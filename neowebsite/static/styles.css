@@ -461,12 +461,13 @@ h3 {
     text-decoration: underline;
 }
 
-/* Shared comparison stage. Both objects use the same responsive scale. */
+/* Equal columns keep object centres fixed as comparison dimensions change. */
 .visual-panel {
     position: relative;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+    justify-items: center;
     gap: var(--s5);
     min-height: 310px;
     padding: var(--s6) var(--s5) 50px;
@@ -498,7 +499,6 @@ h3 {
 .asteroid-wrap {
     position: relative;
     z-index: 1;
-    flex-shrink: 0;
     width: calc(var(--asteroid-size) * var(--comparison-scale));
     height: calc(var(--asteroid-size) * var(--comparison-scale));
 }
@@ -525,7 +525,6 @@ h3 {
 .reference-marker {
     position: relative;
     z-index: 1;
-    flex-shrink: 0;
 }
 
 .reference-object {
@@ -627,7 +626,7 @@ h3 {
         gap: var(--s4);
     }
     .neo-card {
-        --comparison-scale: 0.85;
+        --comparison-scale: 0.75;
     }
     .visual-panel {
         min-height: 280px;
@@ -723,7 +722,7 @@ h3 {
 
 @media (max-width: 360px) {
     .neo-card {
-        --comparison-scale: 0.68;
+        --comparison-scale: 0.6;
     }
     .section-heading {
         flex-wrap: wrap;
