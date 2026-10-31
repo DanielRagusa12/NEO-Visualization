@@ -1,14 +1,16 @@
 :root {
     color-scheme: dark;
-    --bg: #111713;
-    --panel: #1a221c;
-    --panel-raised: #222c24;
-    --text: #edf0e7;
-    --muted: #a5b1a3;
-    --line: #354036;
-    --accent: #c6dfa9;
-    --canvas: #151c17;
-    --ink: #b7c2b4;
+    --bg: #080808;
+    --panel: #151515;
+    --panel-raised: #242424;
+    --text: #eeeeee;
+    --muted: #b3b3b3;
+    --line: #383838;
+    --control-line: #777777;
+    --accent: #eeeeee;
+    --canvas: #0a0a0a;
+    --ink: #c7c7c7;
+    --grid-line: #ffffff0a;
     --radius: 12px;
     --sans: "IBM Plex Sans", system-ui, sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -27,11 +29,38 @@
 }
 
 body {
+    isolation: isolate;
     margin: 0;
     background: var(--bg);
     color: var(--text);
     font-family: var(--sans);
     line-height: 1.5;
+}
+
+/* Static, decorative stars sit behind the content and never intercept input. */
+body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    content: "";
+    background-image:
+        radial-gradient(circle at 82% 104px, #ffffffb3 0 1px, transparent 1.8px),
+        radial-gradient(circle at 36% 42px, #ffffff80 0 1px, transparent 1.6px),
+        radial-gradient(circle at 27px 61px, #ffffff66 0 0.7px, transparent 1.2px),
+        radial-gradient(circle at 143px 127px, #ffffff4d 0 0.8px, transparent 1.4px),
+        radial-gradient(circle at 83px 193px, #ffffff59 0 0.6px, transparent 1.2px),
+        radial-gradient(circle at 219px 37px, #ffffff66 0 0.7px, transparent 1.3px),
+        radial-gradient(circle at 171px 283px, #ffffff40 0 1px, transparent 1.5px);
+    background-size:
+        100% 240px,
+        100% 180px,
+        307px 331px,
+        433px 397px,
+        367px 449px,
+        509px 359px,
+        587px 521px;
+    background-repeat: no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat;
 }
 
 a {
@@ -208,7 +237,7 @@ h2 {
 .sort-button, .motion-button, .retry-button {
     min-height: 44px;
     padding: var(--s2) var(--s4);
-    border: 1px solid var(--line);
+    border: 1px solid var(--control-line);
     border-radius: 6px;
     color: var(--text);
     background: transparent;
@@ -339,7 +368,7 @@ h3 {
     min-width: 0;
     min-height: 44px;
     padding: var(--s2) var(--s3);
-    border: 1px solid var(--line);
+    border: 1px solid var(--control-line);
     border-radius: 6px;
     background: var(--bg);
     color: var(--text);
@@ -414,7 +443,7 @@ h3 {
     padding: var(--s6) var(--s5) 50px;
     color: var(--ink);
     background-color: var(--canvas);
-    background-image: linear-gradient(#edf0e708 1px, transparent 1px), linear-gradient(90deg, #edf0e708 1px, transparent 1px);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 24px 24px;
 }
 
