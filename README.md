@@ -1,5 +1,7 @@
 # NEO Visualization
 
+[![Animated preview of the live NEO Visualization site](docs/images/live-site.gif)](https://d1wsbj4s2jjqv0.cloudfront.net)
+
 NEO Visualization is an AWS data pipeline and static frontend for exploring near-Earth object close approaches. It fetches NASA NeoWs data every day, stores the raw response, writes processed history to DynamoDB, and publishes a curated dataset for the frontend through Amazon S3 and CloudFront.
 
 The frontend visualizes each near-Earth object against familiar vertical references: an average human, the Statue of Liberty, the Eiffel Tower, the Burj Khalifa, and Mount Everest.
