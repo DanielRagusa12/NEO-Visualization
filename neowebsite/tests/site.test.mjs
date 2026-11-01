@@ -9,7 +9,7 @@ const staticRoot = new URL('../static/', import.meta.url);
 const source = readFileSync(new URL('main.js', staticRoot), 'utf8');
 const fixture = JSON.parse(readFileSync(new URL('fixtures/latest.json', import.meta.url), 'utf8'));
 
-function loadSite(fetch = async () => ({ ok: false, status: 503 }), timers = { setTimeout, clearTimeout }) {
+function loadSite(fetch = async () => ({ ok: false, status: 503 }), timers = { setTimeout, clearTimeout }, intl = Intl) {
     const elements = new Map();
     const document = {
         addEventListener() {},
@@ -47,7 +47,7 @@ function loadSite(fetch = async () => ({ ok: false, status: 503 }), timers = { s
             return elements.get(id);
         }
     };
-    const context = vm.createContext({ document, window: {}, fetch, Intl, Map, Set, fixture, AbortController, ...timers });
+    const context = vm.createContext({ document, window: {}, fetch, Intl: intl, Map, Set, fixture, AbortController, ...timers });
     vm.runInContext(source, context);
     vm.runInContext('state.data = fixture; state.referenceObjects = new Map(fixture.reference_objects.map(r => [r.id, r]));', context);
     return { evaluate: code => vm.runInContext(code, context), document };
@@ -143,6 +143,18 @@ test('freshness shows UTC update time and distinguishes old, expired, missing, a
     assert.match(check({ fetched_at: '2026-10-31T10:00:00Z' }).warning, /in the future/);
     assert.equal(evaluate('feedFreshness({window_end_date: "2026-11-04"}, Date.parse("2026-11-04T23:59:59Z")).warning'), '');
     assert.match(evaluate('feedFreshness({window_end_date: "2026-11-04"}, Date.parse("2026-11-05T00:00:00Z")).warning'), /window has ended/);
+});
+
+test('observation windows keep their UTC dates in browsers west of UTC', () => {
+    const { evaluate, document } = loadSite(undefined, undefined, {
+        NumberFormat: Intl.NumberFormat,
+        DateTimeFormat: function (locale, options) {
+            return new Intl.DateTimeFormat(locale, { timeZone: 'America/New_York', ...options });
+        }
+    });
+    assert.equal(evaluate('formatDate("2026-10-31")'), 'Oct 31');
+    evaluate('renderSummary({...fixture, window_start_date: "2026-10-31", window_end_date: "2026-11-07"})');
+    assert.equal(document.getElementById('windowRange').textContent, 'Oct 31 - Nov 7');
 });
 
 test('approach dates remain absolute UTC dates rather than stale relative labels', () => {

@@ -452,7 +452,7 @@ function getValueByPath(object, path) {
 function formatDate(value) {
     if (!value) return '--';
     const date = new Date(`${value}T00:00:00Z`);
-    return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' }).format(date);
+    return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(date);
 }
 
 function formatApproach(approach) {
