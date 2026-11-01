@@ -1,18 +1,22 @@
 const DATA_URL = '/data/latest.json';
 const FEED_STALE_AFTER_MS = 36 * 60 * 60 * 1000;
 
-const ASSET_ROOT = 'assets/models/v1';
+const ASSET_ROOT = 'assets/models/v3';
+const REFERENCE_ASSET_ROOT = 'assets/models/v1';
 const REFERENCE_ASSETS = {
-    average_human: { src: `${ASSET_ROOT}/references/human.png`, aspectRatio: 168 / 440 },
-    statue_of_liberty: { src: `${ASSET_ROOT}/references/statue-of-liberty.png`, aspectRatio: 144 / 440 },
-    eiffel_tower: { src: `${ASSET_ROOT}/references/eiffel-tower.png`, aspectRatio: 217 / 440 },
-    burj_khalifa: { src: `${ASSET_ROOT}/references/burj-khalifa.png`, aspectRatio: 71 / 440 },
-    mount_everest: { src: `${ASSET_ROOT}/references/everest.png`, aspectRatio: 480 / 314 }
+    average_human: { src: `${REFERENCE_ASSET_ROOT}/references/human.png`, aspectRatio: 168 / 440 },
+    statue_of_liberty: { src: `${REFERENCE_ASSET_ROOT}/references/statue-of-liberty.png`, aspectRatio: 144 / 440 },
+    eiffel_tower: { src: `${REFERENCE_ASSET_ROOT}/references/eiffel-tower.png`, aspectRatio: 217 / 440 },
+    burj_khalifa: { src: `${REFERENCE_ASSET_ROOT}/references/burj-khalifa.png`, aspectRatio: 71 / 440 },
+    mount_everest: { src: `${REFERENCE_ASSET_ROOT}/references/everest.png`, aspectRatio: 480 / 314 }
 };
-const NEO_ASSETS = ['cratered', 'angular', 'elongated', 'wedge'].map(id => ({
-    poster: `${ASSET_ROOT}/neos/${id}-poster.webp`,
-    video: `${ASSET_ROOT}/neos/${id}-spin-30fps.webm`
-}));
+const NEO_ASSETS = Array.from({ length: 20 }, (_, index) => {
+    const id = `variant-${String(index + 1).padStart(2, '0')}`;
+    return {
+        poster: `${ASSET_ROOT}/neos/${id}-poster.webp`,
+        video: `${ASSET_ROOT}/neos/${id}-spin-30fps.webm`
+    };
+});
 const ALLOWED_REFERENCE_IDS = new Set([
     'average_human',
     'statue_of_liberty',
@@ -434,7 +438,11 @@ function formatRatio(value) {
 }
 
 function seedFromString(value) {
-    return String(value).split('').reduce((hash, char) => hash + char.charCodeAt(0), 0);
+    // FNV-1a disperses similar identifiers without depending on feed or sort order.
+    return String(value).split('').reduce(
+        (hash, char) => Math.imul(hash ^ char.charCodeAt(0), 16777619) >>> 0,
+        2166136261
+    );
 }
 
 function getValueByPath(object, path) {

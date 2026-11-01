@@ -67,9 +67,13 @@ test('NEO variants are deterministic and do not depend on sort or reference sele
     const before = plain(evaluate('Object.fromEntries(fixture.neos.map(n => [n.neo_id, getNeoAsset(n)]))'));
     const sorted = plain(evaluate('sortNeos(fixture.neos, "largest").map(n => [n.neo_id, getNeoAsset(n)])'));
     for (const [id, asset] of sorted) assert.deepEqual(asset, before[id]);
-    assert.equal(new Set(Object.values(before).map(a => a.poster)).size, 4);
+    assert.equal(evaluate('NEO_ASSETS.length'), 20);
+    assert.equal(new Set(Object.values(before).map(a => a.poster)).size, fixture.neos.length);
     assert.equal(evaluate('getNeoAsset(fixture.neos[0]).poster === getNeoAsset({...fixture.neos[0], visualization: {...fixture.neos[0].visualization, closest_reference_id: "average_human"}}).poster'), true);
-    assert.match(evaluate('getNeoAsset({neo_id: "../../anything<script>"}).video'), /^assets\/models\/v1\/neos\/(cratered|angular|elongated|wedge)-spin-30fps\.webm$/);
+    assert.match(evaluate('getNeoAsset({neo_id: "../../anything<script>"}).video'), /^assets\/models\/v3\/neos\/variant-(0[1-9]|1[0-9]|20)-spin-30fps\.webm$/);
+    assert.equal(evaluate('seedFromString("123") === seedFromString("321")'), false);
+    const reversed = plain(evaluate('Object.fromEntries([...fixture.neos].reverse().map(n => [n.neo_id, getNeoAsset(n)]))'));
+    assert.deepEqual(reversed, before);
 });
 
 test('all five reference images use their real aspect ratios', () => {
@@ -233,7 +237,9 @@ test('text from the dataset is escaped and obsolete CSS animation is gone', () =
     assert.equal(css.includes('@keyframes tumble'), false);
     assert.equal(css.includes('@keyframes floaty'), false);
     assert.match(css, /\.neo-video\[hidden\]/);
-    assert.match(css, /\.motion-controls\[hidden\]/);
+    const html = readFileSync(new URL('index.html', staticRoot), 'utf8');
+    assert.equal(html.includes('motionToggle'), false);
+    assert.equal(css.includes('motion-button'), false);
 });
 
 test('native reference choices update labels and sizes without rebuilding the card', () => {
@@ -274,38 +280,100 @@ test('styles remove legacy illustrations and use shared responsive comparison sc
     assert.equal(source.includes('setupReferencePicker'), false);
 });
 
+test('the summary spans four desktop columns without a visible intro block', () => {
+    const html = readFileSync(new URL('index.html', staticRoot), 'utf8');
+    const css = readFileSync(new URL('styles.css', staticRoot), 'utf8');
+    assert.match(html, /<h1 id="page-title" class="visually-hidden">Near-Earth objects<\/h1>/);
+    assert.equal(html.includes('hero-copy'), false);
+    const grid = css.match(/\.summary-grid\s*\{([^}]+)\}/)[1];
+    assert.match(grid, /grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
+    assert.equal(grid.includes('border-left'), false);
+});
+
 test('comparison objects use stable column centres instead of centring a variable-width group', () => {
     const css = readFileSync(new URL('styles.css', staticRoot), 'utf8');
     const stage = css.match(/\.visual-panel\s*\{([^}]+)\}/)[1];
     assert.match(stage, /display: grid/);
-    assert.match(stage, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+    assert.match(stage, /grid-template-columns: repeat\(2, minmax\(0, 180px\)\)/);
     assert.match(stage, /justify-items: center/);
+    assert.match(stage, /justify-content: center/);
     assert.match(stage, /align-items: end/);
 });
 
-test('every shipped model matches the reviewed asset manifest', () => {
-    const manifest = JSON.parse(readFileSync(new URL('../art/manifest.json', import.meta.url), 'utf8'));
-    const folder = new URL('assets/models/v1/', staticRoot);
-    assert.equal(Object.keys(manifest.assets).length, 13);
-    assert.ok(Object.values(manifest.assets).reduce((sum, entry) => sum + entry.bytes, 0) <= 4 * 1024 ** 2);
-    for (const [name, entry] of Object.entries(manifest.assets)) {
-        const data = readFileSync(new URL(name, folder));
-        assert.equal(createHash('sha256').update(data).digest('hex'), entry.sha256, name);
-        assert.equal(data.length, entry.bytes, name);
-        if (name.endsWith('.webm')) {
-            assert.ok(entry.bytes <= 1024 ** 2, name + ' exceeds the video delivery budget');
-            assert.equal(entry.fps, 30);
-            assert.equal(entry.frames, entry.duration_seconds * 30);
-            assert.equal(entry.alpha_verified, true);
+test('retained v1 and v2 assets match their manifests for cached clients', () => {
+    for (const version of [1, 2]) {
+        const file = version === 1 ? 'manifest.json' : 'manifest-v2.json';
+        const manifest = JSON.parse(readFileSync(new URL('../art/' + file, import.meta.url), 'utf8'));
+        const folder = new URL(`assets/models/v${version}/`, staticRoot);
+        assert.equal(Object.keys(manifest.assets).length, version === 1 ? 13 : 40);
+        assert.ok(Object.values(manifest.assets).reduce((sum, entry) => sum + entry.bytes, 0) <= 4 * 1024 ** 2);
+        for (const [name, entry] of Object.entries(manifest.assets)) {
+            const data = readFileSync(new URL(name, folder));
+            assert.equal(createHash('sha256').update(data).digest('hex'), entry.sha256, name);
+            assert.equal(data.length, entry.bytes, name);
+            if (name.endsWith('.webm')) {
+                assert.ok(entry.bytes <= 1024 ** 2, name + ' exceeds the video delivery budget');
+                assert.equal(entry.fps, 30);
+                assert.equal(entry.frames, entry.duration_seconds * 30);
+                assert.equal(entry.alpha_verified, true);
+            }
         }
+        const blend = readFileSync(new URL('../art/' + manifest.source.file, import.meta.url));
+        assert.equal(createHash('sha256').update(blend).digest('hex'), manifest.source.sha256);
     }
     const { evaluate } = loadSite();
     for (const asset of plain(evaluate('NEO_ASSETS'))) {
         assert.ok(existsSync(new URL(asset.poster, staticRoot)));
         assert.ok(existsSync(new URL(asset.video, staticRoot)));
     }
+});
+
+test('all 20 current variants match the reviewed source and stay within the active delivery budget', () => {
+    const manifest = JSON.parse(readFileSync(new URL('../art/manifest-v3.json', import.meta.url), 'utf8'));
+    const folder = new URL('assets/models/v3/', staticRoot);
+    assert.equal(Object.keys(manifest.assets).length, 40);
+    const { evaluate } = loadSite();
+    const assets = plain(evaluate('NEO_ASSETS'));
+    const referenceBytes = Object.values(plain(evaluate('REFERENCE_ASSETS')))
+        .reduce((total, asset) => total + readFileSync(new URL(asset.src, staticRoot)).length, 0);
+    const totalBytes = Object.values(manifest.assets).reduce((total, asset) => total + asset.bytes, referenceBytes);
+    assert.ok(totalBytes <= 4 * 1024 ** 2, `Active model catalogue exceeds 4 MiB: ${totalBytes}`);
+    assert.equal(new Set(assets.map(a => a.poster)).size, 20);
+    for (const [name, entry] of Object.entries(manifest.assets)) {
+        const data = readFileSync(new URL(name, folder));
+        assert.equal(createHash('sha256').update(data).digest('hex'), entry.sha256, name);
+        assert.equal(data.length, entry.bytes, name);
+        if (name.endsWith('.webm')) {
+            assert.ok(entry.bytes <= 256 * 1024, name + ' exceeds the per-video budget');
+            assert.equal(entry.fps, 30);
+            assert.equal(entry.frames, 240);
+            assert.equal(entry.duration_seconds, 8);
+            assert.equal(entry.alpha_verified, true);
+        }
+    }
+    for (const asset of assets) {
+        for (const path of [asset.poster, asset.video]) {
+            assert.ok(manifest.assets[path.replace('assets/models/v3/', '')], path);
+        }
+    }
     const blend = readFileSync(new URL('../art/' + manifest.source.file, import.meta.url));
     assert.equal(createHash('sha256').update(blend).digest('hex'), manifest.source.sha256);
+    const study = readFileSync(new URL('../art/' + manifest.source.study_file, import.meta.url));
+    assert.equal(createHash('sha256').update(study).digest('hex'), manifest.source.study_sha256);
+    for (const [name, hash] of Object.entries(manifest.source.scripts)) {
+        const script = readFileSync(new URL('../art/' + name, import.meta.url));
+        assert.equal(createHash('sha256').update(script).digest('hex'), hash, name);
+    }
+    assert.equal(manifest.active_catalogue_bytes_including_v1_references, totalBytes);
+    const profiles = Object.values(manifest.rotation_profiles);
+    assert.equal(profiles.length, 20);
+    assert.equal(profiles.filter(p => p.mode === 'tilted_spin').length, 16);
+    assert.deepEqual(Object.entries(manifest.rotation_profiles).filter(([, p]) => p.mode === 'gentle_tumble')
+        .map(([id]) => id), ['variant-04', 'variant-08', 'variant-12', 'variant-19']);
+    for (const profile of profiles) {
+        assert.ok(profile.tilt_degrees >= 18 && profile.tilt_degrees <= 46.000001);
+        assert.ok([0, 10].includes(profile.wobble_degrees));
+    }
 });
 
 test('Blender sources are not deployed and Terraform serves both new media formats', () => {

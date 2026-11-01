@@ -39,7 +39,7 @@ class PreviewTests(unittest.TestCase):
             self.assertEqual(response.headers['Cache-Control'], 'no-store')
             html = response.read().decode()
         self.assertIn('motion.js', html)
-        self.assertIn('Models and rotation periods are illustrative', html)
+        self.assertIn('Shapes, spin axes, rotation periods, and tumbling are illustrative', html)
         self.assertNotIn('LOCAL PROTOTYPE', html)
 
     def test_data_is_explicitly_synthetic(self):
@@ -64,6 +64,7 @@ class PreviewTests(unittest.TestCase):
 
     def test_authoring_files_are_not_served(self):
         for path in ['/art/neo-asset-studio.blend', '/../art/neo-asset-studio.blend',
+                     '/art/neo-varied-motion-studio.blend', '/../art/neo-varied-motion-studio.blend',
                      '/tests/fixtures/latest.json']:
             with self.assertRaises(HTTPError) as error:
                 urlopen(self.base + path)

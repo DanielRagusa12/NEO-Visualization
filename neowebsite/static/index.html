@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Explore near-Earth objects from NASA's NeoWs feed, with estimated diameters compared to familiar landmarks.">
     <title>NEO Field Log</title>
-    <link rel="stylesheet" href="styles.css?v=space-v4">
+    <link rel="stylesheet" href="styles.css?v=space-v7">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
@@ -23,10 +23,7 @@
 
         <main>
             <section class="hero" aria-labelledby="page-title">
-                <div>
-                    <h1 id="page-title">Near-Earth objects</h1>
-                    <p class="hero-copy">Close approaches from NASA NeoWs, with estimated diameters compared to familiar landmarks.</p>
-                </div>
+                <h1 id="page-title" class="visually-hidden">Near-Earth objects</h1>
                 <div class="summary-panel">
                     <div class="summary-grid" aria-label="Dataset summary">
                         <div class="summary-card">
@@ -56,9 +53,6 @@
                         <p class="section-kicker">The weekly selection</p>
                         <h2 id="observations-title">Observations</h2>
                     </div>
-                    <div class="motion-controls" hidden>
-                        <button id="motionToggle" class="motion-button" type="button" aria-controls="neoGrid">Pause asteroid motion</button>
-                    </div>
                 </div>
                 <div class="controls" role="region" aria-label="Sort controls">
                     <span class="control-label">Order by</span>
@@ -78,7 +72,7 @@
 
             <details id="comparison-notes" class="reading-note">
                 <summary>How to read these comparisons</summary>
-                <p id="comparison-explanation" class="visual-note">Models and rotation periods are illustrative, not measured reconstructions. Tiny items are enlarged for visibility. Everest comparisons use summit elevation above sea level, not local mountain relief.</p>
+                <p id="comparison-explanation" class="visual-note">Shapes, spin axes, rotation periods, and tumbling are illustrative, not measured reconstructions. Tiny items are enlarged for visibility. Everest comparisons use summit elevation above sea level, not local mountain relief.</p>
                 <p class="visual-note">One lunar distance is the average distance between Earth and the Moon. A potentially hazardous classification describes an object's size and orbit, not a prediction of an impact.</p>
             </details>
         </main>
@@ -88,7 +82,7 @@
             <a href="#top">Back to top ↑</a>
         </footer>
     </div>
-    <script src="motion.js?v=field-log-v5"></script>
-    <script src="main.js?v=field-log-v5"></script>
+    <script src="motion.js?v=auto-motion-v1"></script>
+    <script src="main.js?v=varied-motion-v1"></script>
 </body>
 </html>

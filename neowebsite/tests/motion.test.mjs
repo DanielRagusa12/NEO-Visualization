@@ -39,11 +39,8 @@ class Image extends Element {
 
 function setup(options = {}) {
     const videos = [];
-    const control = new Element();
-    control.parentElement = { hidden: true };
     const document = new EventTarget();
     document.hidden = false;
-    document.getElementById = id => id === 'motionToggle' ? control : null;
     document.createElement = tag => {
         if (tag === 'canvas') return {
             getContext: () => ({ drawImage() {}, getImageData: () => ({ data: [0, 0, 0, options.alpha ?? 0] }) })
@@ -87,20 +84,15 @@ function setup(options = {}) {
         constructor(callback) { super(callback); resizers.push(this); }
         resize(target) { this.callback([{ target }]); }
     }
-    const storage = new Map();
     const window = { matchMedia: () => preference, ResizeObserver: Resizer };
     if (options.observer !== false) window.IntersectionObserver = Observer;
     const context = vm.createContext({
         window, document, innerHeight: 1000, innerWidth: 1000,
-        IntersectionObserver: Observer, ResizeObserver: Resizer,
-        sessionStorage: {
-            getItem: key => { if (options.noStorage) throw Error(); return storage.get(key) ?? null; },
-            setItem: (key, value) => { if (options.noStorage) throw Error(); storage.set(key, value); }
-        }
+        IntersectionObserver: Observer, ResizeObserver: Resizer
     });
     vm.runInContext(source, context);
     return {
-        videos, control, document, preference, observers, resizers,
+        videos, document, preference, observers, resizers,
         observe(images) { window.NeoMotion.observe({ querySelectorAll: () => images }); },
         refresh() { window.NeoMotion.refresh(); },
         ready(video = videos[0]) { video.readyState = 4; video.emit('loadeddata'); video.emit('playing'); },
@@ -124,12 +116,14 @@ test('only visible, sufficiently large asteroids get a video source', () => {
     assert.equal(app.videos[0].hidden, false);
 });
 
-test('empty feeds hide motion controls and a later load restores them', () => {
+test('empty feeds can be followed by a populated feed without a motion button', () => {
     const app = setup();
     app.observe([]);
-    assert.equal(app.control.parentElement.hidden, true);
-    app.observe([new Image()]);
-    assert.equal(app.control.parentElement.hidden, false);
+    assert.equal(app.videos.length, 0);
+    const image = new Image();
+    app.observe([image]);
+    app.ready();
+    assert.equal(image.dataset.spinning, 'true');
 });
 
 test('reduced motion loads no video and switching the preference stops playback', () => {
@@ -137,7 +131,6 @@ test('reduced motion loads no video and switching the preference stops playback'
     const image = new Image();
     app.observe([image]);
     assert.equal(app.videos[0].src, '');
-    assert.equal(app.control.disabled, true);
     app.reduce(false);
     app.ready();
     assert.equal(image.dataset.spinning, 'true');
@@ -145,20 +138,6 @@ test('reduced motion loads no video and switching the preference stops playback'
     assert.equal(app.videos[0].paused, true);
     assert.equal(app.videos[0].hidden, true);
     assert.equal(image.style.visibility, 'visible');
-});
-
-test('pause freezes the current frame and play resumes it', () => {
-    const app = setup({ noStorage: true });
-    const image = new Image();
-    app.observe([image]);
-    app.ready();
-    app.control.emit('click');
-    assert.equal(app.videos[0].paused, true);
-    assert.equal(app.videos[0].hidden, false);
-    assert.equal(app.control.textContent, 'Play asteroid motion');
-    app.control.emit('click');
-    assert.equal(app.videos[0].paused, false);
-    assert.equal(app.control.textContent, 'Pause asteroid motion');
 });
 
 test('offscreen and background playback stops; returning resumes it', () => {
@@ -220,7 +199,7 @@ test('unsupported codecs, missing alpha, and failed playback keep the poster', a
     }
 });
 
-test('sorting releases retired players and does not duplicate the pause listener', () => {
+test('sorting releases retired players and starts the replacement players', () => {
     const app = setup();
     const old = new Image();
     app.observe([old]);
@@ -232,7 +211,7 @@ test('sorting releases retired players and does not duplicate the pause listener
     assert.equal(app.videos[0].src, '');
     assert.equal(old.nextElementSibling, null);
     assert.ok(app.videos[1].src);
-    app.control.emit('click');
-    assert.equal(app.control.textContent, 'Play asteroid motion');
-    assert.equal(app.videos[1].paused, true);
+    app.ready(app.videos[1]);
+    assert.equal(app.videos[1].paused, false);
+    assert.equal(replacement.dataset.spinning, 'true');
 });

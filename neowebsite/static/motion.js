@@ -1,16 +1,8 @@
 (() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const control = document.getElementById('motionToggle');
-    let controlReady = false;
     let observer = null;
     let sizeObserver = null;
     let images = [];
-    let paused = false;
-    try {
-        paused = sessionStorage.getItem('neoMotionPaused') === 'true';
-    } catch (_) {
-        // Playback controls also work when browser storage is unavailable.
-    }
 
     function updateVisibility(image) {
         const bounds = image.getBoundingClientRect();
@@ -20,20 +12,20 @@
 
     function shouldPlay(image) {
         const bounds = image.getBoundingClientRect();
-        return !paused && !preference.matches && !document.hidden
+        return !preference.matches && !document.hidden
             && ('IntersectionObserver' in window)
             && Math.max(bounds.width, bounds.height) >= 32
             && image.dataset.inView === 'true' && image.dataset.spinFailed !== 'true';
     }
 
-    function stop(image, showPoster = true) {
+    function stop(image) {
         const video = image.nextElementSibling;
         if (video?.classList.contains('neo-video')) {
             video.dataset.requested = 'false';
             video.pause();
-            video.hidden = showPoster;
+            video.hidden = true;
         }
-        image.style.visibility = showPoster ? 'visible' : 'hidden';
+        image.style.visibility = 'visible';
         image.dataset.spinning = 'false';
     }
 
@@ -55,10 +47,7 @@
         const video = image.nextElementSibling;
         if (!video?.classList.contains('neo-video')) return;
         if (!shouldPlay(image)) {
-            const holdFrame = paused && !preference.matches && !document.hidden
-                && image.dataset.inView === 'true' && image.dataset.spinFailed !== 'true'
-                && video.dataset.alphaVerified === 'true' && video.readyState >= 2;
-            stop(image, !holdFrame);
+            stop(image);
             return;
         }
         if (video.dataset.requested === 'true') return;
@@ -72,25 +61,6 @@
 
     function syncAll() {
         images.forEach(syncImage);
-        if (!control) return;
-        control.disabled = preference.matches;
-        control.textContent = preference.matches ? 'Reduced motion enabled'
-            : paused ? 'Play asteroid motion' : 'Pause asteroid motion';
-    }
-
-    function ensureControl() {
-        if (controlReady || !control) return;
-        controlReady = true;
-        control.parentElement.hidden = false;
-        control.addEventListener('click', () => {
-            paused = !paused;
-            try {
-                sessionStorage.setItem('neoMotionPaused', String(paused));
-            } catch (_) {
-                // Keep the in-memory setting if storage is blocked.
-            }
-            syncAll();
-        });
     }
 
     function observe(grid) {
@@ -104,9 +74,7 @@
             video.load();
             video.remove();
         });
-        ensureControl();
         images = [...grid.querySelectorAll('.neo-image[data-spin-src]')];
-        if (control) control.parentElement.hidden = images.length === 0;
         images.forEach(image => {
             updateVisibility(image);
             image.dataset.spinning = 'false';
