@@ -1,0 +1,361 @@
+{
+  "source": {
+    "file": "neo-variations-studio.blend",
+    "sha256": "6397c13f88db393942c389d7086af44d2c4657f9eb89406667b33355bb2be007",
+    "study_file": "neo-variations-study.blend",
+    "study_sha256": "a70d9602c554dbb7d86894e62a00322630862b216f5b3eeb24bf831f48f574bb",
+    "blender_version": "5.2.3 LTS",
+    "engine": "BLENDER_EEVEE",
+    "render_samples": 64,
+    "scripts": {
+      "variations.py": "244ce3182005c7aa8c3ff155cbd2f3ab32f49e49145386263f2f8bf58c7255a0",
+      "render_variations.py": "1bf44aa6b011fc491cfc3de197b18dbe06cb92e81c9a1b19bd81a6e11de0ebd4",
+      "encode.py": "f0abeabc0259a46abfca2e1fe27d1c261136fe80ecada2448416e7b100ffc3d0"
+    }
+  },
+  "provenance": "Twenty original seeded asteroid meshes and procedural materials authored for this project and approved in a numbered contact sheet. No downloaded models, external textures, or generation services. Shapes and rotation are illustrative, not measured NASA reconstructions.",
+  "asset_root": "../static/assets/models/v2",
+  "active_catalogue_bytes_including_v1_references": 4017553,
+  "assets": {
+    "neos/variant-01-spin-30fps.webm": {
+      "sha256": "4b15dd16826726585de9a65a238d8476b6d4a8b7a889a9976bbd65d0c028fb43",
+      "bytes": 203395,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-01-poster.webp": {
+      "sha256": "591737f7f7e40c471912cb4a9e09d8e1160a408f30584bd52bc796731cba6c0b",
+      "bytes": 5720,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-02-spin-30fps.webm": {
+      "sha256": "0e5fc9af951f2e52a910ffdd8d547f423f17e27f09603695bf2299648e1a1610",
+      "bytes": 171536,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-02-poster.webp": {
+      "sha256": "2294ce1d4c895afe94d697afbd0fc94cb6bcb64a27db6fb9bd87a43205e5fd56",
+      "bytes": 5590,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-03-spin-30fps.webm": {
+      "sha256": "658318bf1a4eba6cb52c63332938d33bfde56767627fc7b0d57b8e6589384394",
+      "bytes": 175484,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-03-poster.webp": {
+      "sha256": "2b3973719f9b36c6fbfbe2625072433964cc23cde52a9c2d08b11aed671d578f",
+      "bytes": 4472,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-04-spin-30fps.webm": {
+      "sha256": "fc75d0a2b714aacc41ef6bec9b6e0c2bf199764c289a5443d4b7ef3dc3db8605",
+      "bytes": 154436,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-04-poster.webp": {
+      "sha256": "4ddc5c2eb2c077acb1e06ce22118e619de5c00d71a260da1f38545b1d2c36e2a",
+      "bytes": 4092,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-05-spin-30fps.webm": {
+      "sha256": "5a74af41e90c8c690e3f26cb3de85c2c3936072e311d3a7025784576ccedaae1",
+      "bytes": 186545,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-05-poster.webp": {
+      "sha256": "11abc018c1308a637c0780ae86174863dd4a1f7530866018aaafa4980f478266",
+      "bytes": 4692,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-06-spin-30fps.webm": {
+      "sha256": "d2877725fb8e7bd1e28d4ed12c8474095557928023424fcdbf710a09cf27cf1d",
+      "bytes": 161500,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-06-poster.webp": {
+      "sha256": "4f374d1808643e02cf815a314c32e9618dbe7437ef5685b72c0f8fbcd19fafc1",
+      "bytes": 4424,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-07-spin-30fps.webm": {
+      "sha256": "3a55b3f1c23619b7f1a24f9ff5ac25bec376b9021f2582178bedc50f26970bb4",
+      "bytes": 167977,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-07-poster.webp": {
+      "sha256": "e8f83f57afc8fdfc9d64cd3412506c3af171f080eed5400cc001768d366aec99",
+      "bytes": 5142,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-08-spin-30fps.webm": {
+      "sha256": "bb39c97ec5d28ad0565c423c73b04beee062754fc8af1794d0dca89d09de6175",
+      "bytes": 195928,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-08-poster.webp": {
+      "sha256": "d7ccd62e1a974c04ff861d2ec1783a959fc84ca37a6b6a234fba7fe3d856e7fa",
+      "bytes": 5340,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-09-spin-30fps.webm": {
+      "sha256": "460fa1c55270811a7cbfb4d97d78cf143210b643b7eccc95f3c41395f5436011",
+      "bytes": 188704,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-09-poster.webp": {
+      "sha256": "af2b3a68323020eebad7ce518722430bf7555388d4f3f9da31698ea81eba6758",
+      "bytes": 5356,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-10-spin-30fps.webm": {
+      "sha256": "ed224c2db7dbe916ed73d1d9d43000249e69d0e9a3f6b61d85b21d1140f7a228",
+      "bytes": 153579,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-10-poster.webp": {
+      "sha256": "26207489c885eeb051c270a2e88c48e3000f840b49a0b6d2ddfef58b9d12a447",
+      "bytes": 4106,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-11-spin-30fps.webm": {
+      "sha256": "8e49c170d73e901fc9c81e451f400132e965d01cd62b810815b61aeebb25abb3",
+      "bytes": 199404,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-11-poster.webp": {
+      "sha256": "42269cc7dd6a2804671a04b91d004dc5f84079434a8d5a408b0c8935adced9be",
+      "bytes": 5432,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-12-spin-30fps.webm": {
+      "sha256": "a2316b88c423e1d961696353b9ffe6b1343972a2bb00b02425bb95eba4741b99",
+      "bytes": 177730,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-12-poster.webp": {
+      "sha256": "6f1d5257325f3eca3bdc8d34bfcecf268687f30dc8d72f90476301713bfeca4d",
+      "bytes": 4806,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-13-spin-30fps.webm": {
+      "sha256": "2b2a8fdb158c53d0281141c91d98e5d202a5be6d08a944ac76f421f86daaf627",
+      "bytes": 181429,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-13-poster.webp": {
+      "sha256": "5d7ef122b2336cab14f32baf5b8b3df387df4a20f20eac651085b50f55b4ef5e",
+      "bytes": 5218,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-14-spin-30fps.webm": {
+      "sha256": "62e810b3e62b02b15f5216f181ca26fc6ccc62eac0698b4b9c902bd9f90bdcfd",
+      "bytes": 165481,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-14-poster.webp": {
+      "sha256": "14b5ec28e7f9432babba9214044aa0e5793a91dd519102970e08851ff83c1cdf",
+      "bytes": 4364,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-15-spin-30fps.webm": {
+      "sha256": "b536444063afb8a1edbe75f482bb6d6e0224b15e09810514a58d9ce1feb864c8",
+      "bytes": 187695,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-15-poster.webp": {
+      "sha256": "333172a4783787a46efe33aff320f8be424600ee8ff65ae021b6be76923910fd",
+      "bytes": 4776,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-16-spin-30fps.webm": {
+      "sha256": "7cad5a23c674c85a7165ee3a781cc9d8cbd1aaedc2d3b3e3bdca7efa95084002",
+      "bytes": 146584,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-16-poster.webp": {
+      "sha256": "6ede3568c79e4a3b02fb5326629b5e8dfa601231936e10a7b1a1d068c9407baf",
+      "bytes": 3874,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-17-spin-30fps.webm": {
+      "sha256": "67db7c71db1d141fe81641907a6c4fb293c96edde45aab95628e61a428356634",
+      "bytes": 182173,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-17-poster.webp": {
+      "sha256": "a8a1502fffd9159c2707670811d1804e47bf22bb94a46576e4b6e795955b59c2",
+      "bytes": 4876,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-18-spin-30fps.webm": {
+      "sha256": "4ee9fe4eee192ffc93f025590f161bc7907e198d442417732805b5a31453736a",
+      "bytes": 185104,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-18-poster.webp": {
+      "sha256": "ab3bef6329b4554fe6b4878bb367f2c310c4a39fb29076f192e8a731c160f883",
+      "bytes": 5226,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-19-spin-30fps.webm": {
+      "sha256": "b95334186a80e92f5c4f51c2e66d19e7704bf66d9801f5d459a696bcea0e1648",
+      "bytes": 190611,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-19-poster.webp": {
+      "sha256": "ca545d48f6d1d151d9e25bdef12d7eca2415c2b3cc617d6cf85c8c656853c56f",
+      "bytes": 5652,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-20-spin-30fps.webm": {
+      "sha256": "0270135d85da9650c67937bdb5adbefbf8793bba44b52ee48f62a64a26cc2425",
+      "bytes": 176271,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 38,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-20-poster.webp": {
+      "sha256": "7620091785ae61f5e31a9abeebf9c1715c97371e3fbd057993407af5d4aace1c",
+      "bytes": 5376,
+      "width": 256,
+      "height": 256
+    }
+  }
+}

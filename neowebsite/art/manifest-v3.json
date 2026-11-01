@@ -1,0 +1,665 @@
+{
+  "source": {
+    "file": "neo-varied-motion-studio.blend",
+    "sha256": "742d2f16743e3b0ae1d2fab3bab2dff4379c455d50fcbcaa8464343aa61ecf3e",
+    "study_file": "neo-variations-study.blend",
+    "study_sha256": "a70d9602c554dbb7d86894e62a00322630862b216f5b3eeb24bf831f48f574bb",
+    "blender_version": "5.2.3 LTS",
+    "engine": "BLENDER_EEVEE",
+    "render_samples": 64,
+    "motion_profile": "varied",
+    "scripts": {
+      "variations.py": "244ce3182005c7aa8c3ff155cbd2f3ab32f49e49145386263f2f8bf58c7255a0",
+      "render_variations.py": "9bac125027485c5e6a9ab1e7577c8c37d706eb72950124763b5f2e49b7d29122",
+      "encode.py": "f0abeabc0259a46abfca2e1fe27d1c261136fe80ecada2448416e7b100ffc3d0",
+      "rotation.py": "33e964b1873ac00ac85175503093e011fcb847bb9909c2842649101cca702833"
+    }
+  },
+  "provenance": "The approved twenty original seeded asteroid meshes and procedural materials, with illustrative tilted world-axis spins and bounded nutation on four variants. Geometry and initial poses are unchanged. No downloaded models or external textures. These are not measured NASA rotations or a free-rigid-body simulation.",
+  "asset_root": "../static/assets/models/v3",
+  "active_catalogue_bytes_including_v1_references": 3993702,
+  "rotation_profiles": {
+    "variant-01": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.3574848743734567,
+        0.32748272088400543,
+        0.8746197071393957
+      ],
+      "perpendicular": [
+        -0.6449197851569215,
+        0.5907944675009682,
+        -0.48480962024633706
+      ],
+      "tilt_degrees": 29.000000000000004,
+      "wobble_degrees": 0
+    },
+    "variant-02": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.05620144647508641,
+        -0.6403259393314024,
+        0.766044443118978
+      ],
+      "perpendicular": [
+        0.06697827574567543,
+        -0.7631107386294609,
+        -0.6427876096865393
+      ],
+      "tilt_degrees": 40.0,
+      "wobble_degrees": 0
+    },
+    "variant-03": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.22792153620639458,
+        0.29729088980994955,
+        0.9271838545667874
+      ],
+      "perpendicular": [
+        0.5641255978748936,
+        0.7358207730090388,
+        -0.374606593415912
+      ],
+      "tilt_degrees": 22.0,
+      "wobble_degrees": 0
+    },
+    "variant-04": {
+      "mode": "gentle_tumble",
+      "axis": [
+        -0.5363118396588447,
+        -0.0948751237356009,
+        0.838670567945424
+      ],
+      "perpendicular": [
+        -0.8258478115695992,
+        -0.14609487897802517,
+        -0.5446390350150271
+      ],
+      "tilt_degrees": 33.0,
+      "wobble_degrees": 10
+    },
+    "variant-05": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.5861293550594612,
+        -0.37283056578870993,
+        0.7193398003386512
+      ],
+      "perpendicular": [
+        0.606954714966588,
+        -0.3860773527818984,
+        -0.6946583704589973
+      ],
+      "tilt_degrees": 44.0,
+      "wobble_degrees": 0
+    },
+    "variant-06": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.11381349700459577,
+        0.42333881258013156,
+        0.898794046299167
+      ],
+      "perpendicular": [
+        -0.23335225013209646,
+        0.8679731937226615,
+        -0.4383711467890774
+      ],
+      "tilt_degrees": 26.0,
+      "wobble_degrees": 0
+    },
+    "variant-07": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.27736537586161886,
+        -0.5340877927500715,
+        0.7986355100472928
+      ],
+      "perpendicular": [
+        -0.36807628573396,
+        -0.7087584396596571,
+        -0.6018150231520483
+      ],
+      "tilt_degrees": 37.0,
+      "wobble_degrees": 0
+    },
+    "variant-08": {
+      "mode": "gentle_tumble",
+      "axis": [
+        0.305809421361165,
+        0.11169252886110365,
+        0.9455185755993168
+      ],
+      "perpendicular": [
+        0.8881350480128445,
+        0.324378657273538,
+        -0.3255681544571567
+      ],
+      "tilt_degrees": 19.0,
+      "wobble_degrees": 10
+    },
+    "variant-09": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.4621798485513423,
+        0.19076107462755143,
+        0.8660254037844387
+      ],
+      "perpendicular": [
+        -0.800518979925414,
+        0.3304078733613574,
+        -0.49999999999999994
+      ],
+      "tilt_degrees": 29.999999999999996,
+      "wobble_degrees": 0
+    },
+    "variant-10": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.27809246211288463,
+        -0.5942036957441118,
+        0.754709580222772
+      ],
+      "perpendicular": [
+        0.319908782700968,
+        -0.6835531590379914,
+        -0.6560590289905073
+      ],
+      "tilt_degrees": 41.0,
+      "wobble_degrees": 0
+    },
+    "variant-11": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.11692263347398155,
+        0.37282692036923826,
+        0.9205048534524404
+      ],
+      "perpendicular": [
+        0.275452462688023,
+        0.878325182394654,
+        -0.39073112848927377
+      ],
+      "tilt_degrees": 23.0,
+      "wobble_degrees": 0
+    },
+    "variant-12": {
+      "mode": "gentle_tumble",
+      "axis": [
+        -0.4838061121235909,
+        -0.2804074698789236,
+        0.8290375725550416
+      ],
+      "perpendicular": [
+        -0.7172720581623342,
+        -0.4157211701219039,
+        -0.5591929034707469
+      ],
+      "tilt_degrees": 34.0,
+      "wobble_degrees": 10
+    },
+    "variant-13": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.6906221898120325,
+        -0.1517925918456921,
+        0.7071067811865476
+      ],
+      "perpendicular": [
+        0.6906221898120326,
+        -0.15179259184569213,
+        -0.7071067811865475
+      ],
+      "tilt_degrees": 45.0,
+      "wobble_degrees": 0
+    },
+    "variant-14": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.2611247085798857,
+        0.3713775173900989,
+        0.8910065241883679
+      ],
+      "perpendicular": [
+        -0.5124860963058546,
+        0.72886941713823,
+        -0.45399049973954675
+      ],
+      "tilt_degrees": 27.0,
+      "wobble_degrees": 0
+    },
+    "variant-15": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.07908136570185492,
+        -0.6105613726718189,
+        0.7880107536067219
+      ],
+      "perpendicular": [
+        -0.10121953229248994,
+        -0.7814829198916144,
+        -0.6156614753256583
+      ],
+      "tilt_degrees": 38.0,
+      "wobble_degrees": 0
+    },
+    "variant-16": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.26151083545855774,
+        0.22043108079006943,
+        0.9396926207859084
+      ],
+      "perpendicular": [
+        0.7184951153651006,
+        0.6056294170166934,
+        -0.3420201433256687
+      ],
+      "tilt_degrees": 20.0,
+      "wobble_degrees": 0
+    },
+    "variant-17": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.5145997487317976,
+        0.021244227738973026,
+        0.8571673007021123
+      ],
+      "perpendicular": [
+        -0.8564378034370628,
+        0.03535633234435454,
+        -0.5150380749100542
+      ],
+      "tilt_degrees": 31.0,
+      "wobble_degrees": 0
+    },
+    "variant-18": {
+      "mode": "tilted_spin",
+      "axis": [
+        0.47433444125955326,
+        -0.47195614859980445,
+        0.7431448254773942
+      ],
+      "perpendicular": [
+        0.5268017666773726,
+        -0.5241604050855291,
+        -0.6691306063588582
+      ],
+      "tilt_degrees": 42.0,
+      "wobble_degrees": 0
+    },
+    "variant-19": {
+      "mode": "gentle_tumble",
+      "axis": [
+        -0.018819544323454552,
+        0.4063010233460266,
+        0.9135454576426009
+      ],
+      "perpendicular": [
+        -0.04226938861859926,
+        0.912567039710091,
+        -0.4067366430758002
+      ],
+      "tilt_degrees": 24.000000000000004,
+      "wobble_degrees": 10
+    },
+    "variant-20": {
+      "mode": "tilted_spin",
+      "axis": [
+        -0.3674593960324034,
+        -0.4404128978636603,
+        0.8191520442889918
+      ],
+      "perpendicular": [
+        -0.5247864040023382,
+        -0.628974802227505,
+        -0.573576436351046
+      ],
+      "tilt_degrees": 35.0,
+      "wobble_degrees": 0
+    }
+  },
+  "assets": {
+    "neos/variant-01-spin-30fps.webm": {
+      "sha256": "0427396623530b3c3ca603999da7957f4bea6cc8da4611223fa8e38438fd0186",
+      "bytes": 197242,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-01-poster.webp": {
+      "sha256": "591737f7f7e40c471912cb4a9e09d8e1160a408f30584bd52bc796731cba6c0b",
+      "bytes": 5720,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-02-spin-30fps.webm": {
+      "sha256": "58aa1475b001af7d735d04c46596cc55d8f62e06817bef6025d37c73433d278f",
+      "bytes": 180179,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-02-poster.webp": {
+      "sha256": "45e0099ec95c013efd3ed6483bf4675cc85e02435d303af48172d00d0f5dff0b",
+      "bytes": 5588,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-03-spin-30fps.webm": {
+      "sha256": "b4536b261e051cfa3776cf2b8a60841b7ff65936b144103ed8f01e54e4305908",
+      "bytes": 166487,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-03-poster.webp": {
+      "sha256": "2b3973719f9b36c6fbfbe2625072433964cc23cde52a9c2d08b11aed671d578f",
+      "bytes": 4472,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-04-spin-30fps.webm": {
+      "sha256": "cee3e63609dc7c8869d4b3d6d76d7553cc7bb24658c2fc2b8d2593a800f1b622",
+      "bytes": 159339,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-04-poster.webp": {
+      "sha256": "c8ae931956c26e797f48f4b614c64c9fd0207951f33b92f7d699b8266181dad5",
+      "bytes": 4094,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-05-spin-30fps.webm": {
+      "sha256": "7d822f5bb774bfd787cfbbde2069f86cb928c07f50087bbcad70c0e9daccdb07",
+      "bytes": 183142,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-05-poster.webp": {
+      "sha256": "11abc018c1308a637c0780ae86174863dd4a1f7530866018aaafa4980f478266",
+      "bytes": 4692,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-06-spin-30fps.webm": {
+      "sha256": "d0a73a6edc7cdab78cc8c28309113e7df1b9acee6cd3c88436083cb4d90a91e5",
+      "bytes": 164747,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-06-poster.webp": {
+      "sha256": "84d178db68f950954f3ed86545d36a05c146ac9bf9d7bc082b711138a2cdc711",
+      "bytes": 4430,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-07-spin-30fps.webm": {
+      "sha256": "1b37ee2ad10560f78427db67f27f0b3865b2e483905c14edbdee2e0388dda7a3",
+      "bytes": 176040,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-07-poster.webp": {
+      "sha256": "c9b947dd576a3a45d5601569131c1840eb5e11a4303a790d0a8af62ec1c6f334",
+      "bytes": 5144,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-08-spin-30fps.webm": {
+      "sha256": "5ae966858cdd7d7b688d507d3613ecabffb297fdb38978f033eaea6c14d250b0",
+      "bytes": 179914,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-08-poster.webp": {
+      "sha256": "cc853b3643ebc5c990b7f609dcb53cd01ddf18e01e44d1aa1361b4a00e1e4733",
+      "bytes": 5344,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-09-spin-30fps.webm": {
+      "sha256": "8e7b892ac1d511b88782f8819b971f330f2a2ecfa1a61ca6df50757a6ba1d363",
+      "bytes": 184981,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-09-poster.webp": {
+      "sha256": "af2b3a68323020eebad7ce518722430bf7555388d4f3f9da31698ea81eba6758",
+      "bytes": 5356,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-10-spin-30fps.webm": {
+      "sha256": "c8c3fe8af5bb2522e92d18726af16542090899b42add2b0f98cf54854f510c38",
+      "bytes": 166772,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-10-poster.webp": {
+      "sha256": "26207489c885eeb051c270a2e88c48e3000f840b49a0b6d2ddfef58b9d12a447",
+      "bytes": 4106,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-11-spin-30fps.webm": {
+      "sha256": "c65f147d14dafc5c65ba281f27ae396fe2816ca8c5b8ca087de46353f8615d73",
+      "bytes": 188912,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-11-poster.webp": {
+      "sha256": "701cde90359e98008a0a3b4a6dafcb39ab37ac645d6c65c62eca0e7bf4688273",
+      "bytes": 5440,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-12-spin-30fps.webm": {
+      "sha256": "3d87a3ce50be133d0ed091846df9fd5fdfddba83d4f7f94164b6c2b91e90f733",
+      "bytes": 177828,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-12-poster.webp": {
+      "sha256": "9056b321d9ab8340205ec23b18708ebc32f5dc4ec744f034ec835b46e692169b",
+      "bytes": 4814,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-13-spin-30fps.webm": {
+      "sha256": "ba23e8cd1aecb4b03cabfaf3d97984b2649afceec5777e6338ef5fbdab6f5330",
+      "bytes": 167285,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-13-poster.webp": {
+      "sha256": "c908beccd22c4cea04927f099ead3b00a4f0f82c06e8bac5147944d43d6b9b4a",
+      "bytes": 5228,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-14-spin-30fps.webm": {
+      "sha256": "186f2e5460d114a390d816b70b685755d44f99967fe4f65429afd245c7b13617",
+      "bytes": 164479,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-14-poster.webp": {
+      "sha256": "14b5ec28e7f9432babba9214044aa0e5793a91dd519102970e08851ff83c1cdf",
+      "bytes": 4364,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-15-spin-30fps.webm": {
+      "sha256": "76b20c3c3e01d6dbceb03cc99d96c140c781bf27d3682e8a4e50d6e13baa7ab9",
+      "bytes": 184650,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-15-poster.webp": {
+      "sha256": "81c11e9f983b8ac35bf1a47ad58f23de4d1f6bae3fd82e3b8760d498d4f24b61",
+      "bytes": 4778,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-16-spin-30fps.webm": {
+      "sha256": "97c9ff6af3a16905e81a8784bd37a602b4115a53b9d8cc5ebb701011c569c168",
+      "bytes": 157048,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-16-poster.webp": {
+      "sha256": "850d6b817cad3804015fa29ccfc02e7d394f05c0feb67093890ee59baa577bbb",
+      "bytes": 3874,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-17-spin-30fps.webm": {
+      "sha256": "03863bed7feac15e98d9c83291546b5eca11095f6a4733749f856b86555c5f3e",
+      "bytes": 163899,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-17-poster.webp": {
+      "sha256": "f2258996afa323280f7ac588a92cc27c6b13b2e522b81172637f74580cbc46c1",
+      "bytes": 4880,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-18-spin-30fps.webm": {
+      "sha256": "0ef6423236f9365c02dc26f4a2593ad2d5bc67460cff0def42ea9bd536ab3c97",
+      "bytes": 190100,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-18-poster.webp": {
+      "sha256": "0d91e458b556916482639ba72c14ce8b99936a2bce7ead6b03dea7b5553b3d97",
+      "bytes": 5230,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-19-spin-30fps.webm": {
+      "sha256": "4e8762321d02af992c35b9445f8d07b834088e6d8e5ea95841f210087ff24683",
+      "bytes": 193235,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-19-poster.webp": {
+      "sha256": "ad400b4cd2c415300d28fc4a1f7f30811294d16d4b3fd3bcca58689290d2b306",
+      "bytes": 5660,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-20-spin-30fps.webm": {
+      "sha256": "ac19a585c4d7ecda6be875900073c51b1b5113cf477398795df14729f0e7851d",
+      "bytes": 181362,
+      "fps": 30,
+      "frames": 240,
+      "duration_seconds": 8.0,
+      "crf": 40,
+      "alpha_verified": true,
+      "width": 256,
+      "height": 256
+    },
+    "neos/variant-20-poster.webp": {
+      "sha256": "3073f8a002ea71fcd35ef018685150898519c1e0d5efd94437aa2bb3f11f0a90",
+      "bytes": 5394,
+      "width": 256,
+      "height": 256
+    }
+  }
+}
