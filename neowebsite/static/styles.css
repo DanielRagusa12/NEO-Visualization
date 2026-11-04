@@ -243,6 +243,10 @@ h2 {
     font-size: 0.8rem;
 }
 
+.collection-note a {
+    white-space: nowrap;
+}
+
 .sort-controls {
     display: flex;
     flex-wrap: wrap;
@@ -620,14 +624,21 @@ h3 {
         font-size: 0.6875rem;
     }
     .hero {
-        padding: var(--s5) 0 var(--s6);
+        padding: var(--s4) 0 var(--s5);
     }
     .summary-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--s4);
     }
     .summary-card strong {
+        margin-top: var(--s1);
         font-size: 0.85rem;
+    }
+    .feed-freshness {
+        margin-top: var(--s3);
+    }
+    .section-heading {
+        margin-bottom: var(--s3);
     }
     .neo-grid {
         grid-template-columns: 1fr;
@@ -636,7 +647,12 @@ h3 {
         --comparison-scale: 1;
     }
     .controls {
-        gap: var(--s3);
+        grid-template-columns: 1fr;
+        gap: var(--s2);
+        padding-bottom: var(--s3);
+    }
+    .collection-note {
+        margin-bottom: var(--s4);
     }
     .sort-controls {
         display: grid;
@@ -655,7 +671,13 @@ h3 {
         padding: var(--s4) var(--s5);
     }
     .card-heading {
-        min-height: 110px;
+        min-height: 0;
+    }
+}
+
+@media (min-width: 380px) and (max-width: 760px) {
+    .sort-controls {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
